@@ -174,8 +174,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .divider{height:1px;background:var(--gray3);margin:16px 0;}
 .section-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
 .footer-note{font-size:10px;color:var(--gray2);text-align:center;padding:12px 16px 20px;letter-spacing:1px;}
-.img-upload-area{border:1px dashed var(--gray3);border-radius:var(--radius-sm);padding:20px;text-align:center;cursor:pointer;color:var(--gray);margin-bottom:12px;transition:all 0.2s;}
-.img-upload-area:hover{border-color:var(--gold);}
+.tag-opt{padding:8px 14px;border:1px solid var(--gray3);border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;color:var(--gray);}
+.tag-opt.active{background:var(--gold);color:#000;border-color:var(--gold);}
+
 </style>
 </head>
 <body>
@@ -319,7 +320,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="form-group"><label>Nom *</label><input type="text" id="pName" placeholder="Uniqlo AIRism Blouse"></div>
   <div class="form-group"><label>Tavsif</label><input type="text" id="pDesc" placeholder="Qisqacha tavsif"></div>
   <div class="form-group"><label>Narx (so'm) *</label><input type="number" id="pPrice" placeholder="185000"></div>
-  <div class="form-group"><label>Kategoriya *</label>
+  <div class="form-group">
+    <label>Kategoriyalar (bir nechta tanlash mumkin)</label>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px" id="tagSelector">
+      <div class="tag-opt" onclick="toggleTag('ayol')" id="tag_ayol">👩 Women</div>
+      <div class="tag-opt" onclick="toggleTag('erkak')" id="tag_erkak">👨 Men</div>
+      <div class="tag-opt" onclick="toggleTag('unisex')" id="tag_unisex">🤝 Unisex</div>
+      <div class="tag-opt" onclick="toggleTag('kiyim')" id="tag_kiyim">👗 Kiyim</div>
+      <div class="tag-opt" onclick="toggleTag('kosmetika')" id="tag_kosmetika">💄 Kosmetika</div>
+      <div class="tag-opt" onclick="toggleTag('oyoq_kiyim')" id="tag_oyoq_kiyim">👠 Oyoq kiyim</div>
+    </div>
+    <input type="hidden" id="pTags" value="">
+  </div>
+  <div class="form-group"><label>Asosiy kategoriya *</label>
     <select id="pCat">
       <option value="kiyim">👗 Kiyim</option>
       <option value="kosmetika">💄 Kosmetika</option>
@@ -410,12 +423,12 @@ function previewImage(input){
 // LOAD PRODUCTS
 async function loadProducts(filter='all'){
   let f='active=eq.true';
-  if(filter==='ayol')f+='&gender=eq.ayol';
-  else if(filter==='erkak')f+='&gender=eq.erkak';
-  else if(filter==='unisex')f+='&gender=eq.unisex';
-  else if(filter==='kiyim')f+='&cat=eq.kiyim';
-  else if(filter==='kosmetika')f+='&cat=eq.kosmetika';
-  else if(filter==='oyoq_kiyim')f+='&cat=eq.oyoq_kiyim';
+  if(filter==='ayol')f+='&or=(gender.eq.ayol,tags.cs.{ayol})';
+  else if(filter==='erkak')f+='&or=(gender.eq.erkak,tags.cs.{erkak})';
+  else if(filter==='unisex')f+='&or=(gender.eq.unisex,tags.cs.{unisex})';
+  else if(filter==='kiyim')f+='&or=(cat.eq.kiyim,tags.cs.{kiyim})';
+  else if(filter==='kosmetika')f+='&or=(cat.eq.kosmetika,tags.cs.{kosmetika})';
+  else if(filter==='oyoq_kiyim')f+='&or=(cat.eq.oyoq_kiyim,tags.cs.{oyoq_kiyim})';
 
   allProducts=await dbQ('products',f+'&order=created_at.asc');
   if(!Array.isArray(allProducts)||!allProducts.length){
@@ -870,6 +883,23 @@ async function addMU(pid,type,pname){
 }
 async function delM(mid,pid,pname){if(!confirm("O'chirishni tasdiqlaysizmi?"))return;await dbD('product_media',mid);showToast("O'chirildi");await renderMM(pid,pname);await loadProducts();}
 
+// TAG SELECTOR
+function toggleTag(tag){
+  const el=document.getElementById('tag_'+tag);
+  el.classList.toggle('active');
+  const active=[...document.querySelectorAll('.tag-opt.active')].map(x=>x.id.replace('tag_',''));
+  document.getElementById('pTags').value=active.join(',');
+}
+function setTags(tags){
+  document.querySelectorAll('.tag-opt').forEach(el=>el.classList.remove('active'));
+  if(tags&&tags.length){
+    tags.forEach(t=>{const el=document.getElementById('tag_'+t);if(el)el.classList.add('active');});
+    document.getElementById('pTags').value=tags.join(',');
+  }else{
+    document.getElementById('pTags').value='';
+  }
+}
+
 function openProductForm(p=null){
   document.getElementById('pEditId').value=p?p.id:'';
   document.getElementById('productFormTitle').textContent=p?'Tahrirlash':'Yangi mahsulot';
@@ -892,7 +922,9 @@ async function saveProduct(){
   const btn=document.getElementById('pSubmitBtn');btn.textContent='...';btn.disabled=true;
   let imgU=document.getElementById('pImageUrl').value;
   if(uploadedFile){showToast('Yuklanmoqda...');const u=await up(uploadedFile,'products');if(u)imgU=u;}
-  const data={name,description:document.getElementById('pDesc').value.trim(),price:parseInt(price),cat:document.getElementById('pCat').value,gender:document.getElementById('pGender').value,emoji:document.getElementById('pEmoji').value||'🛍️',active:document.getElementById('pActive').value==='true',image_url:imgU||null};
+  const tagsVal=document.getElementById('pTags').value;
+  const tags=tagsVal?tagsVal.split(',').filter(t=>t):[];
+  const data={name,description:document.getElementById('pDesc').value.trim(),price:parseInt(price),cat:document.getElementById('pCat').value,gender:document.getElementById('pGender').value,tags,emoji:document.getElementById('pEmoji').value||'🛍️',active:document.getElementById('pActive').value==='true',image_url:imgU||null};
   const eid=document.getElementById('pEditId').value;
   if(eid)await dbU('products',eid,data);else await dbI('products',data);
   showToast(eid?'Yangilandi!':'Qo\'shildi!');uploadedFile=null;openPanel('adminPanel');await loadAdminPanel();await loadProducts();
