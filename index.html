@@ -67,9 +67,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .variant-opt{padding:8px 16px;border:1px solid var(--gray3);background:transparent;color:var(--white);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;border-radius:var(--radius-sm);}
 .variant-opt.active{border-color:var(--gold);color:var(--gold);}
 .variant-opt.out{opacity:0.3;text-decoration:line-through;cursor:not-allowed;}
-.color-opt{width:30px;height:30px;border-radius:50%;border:2px solid var(--gray3);cursor:pointer;transition:all 0.2s;}
-.color-opt.active{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold);}
-.color-opt.out{opacity:0.3;cursor:not-allowed;}
+.color-opt{width:36px;height:36px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:all 0.2s;overflow:hidden;position:relative;box-shadow:0 0 0 1px var(--gray3);}
+.color-opt.active{box-shadow:0 0 0 2px var(--white),0 0 0 4px var(--gray);}
+.color-opt.out{opacity:0.4;cursor:not-allowed;}
+.color-opt img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.variant-opt{padding:8px 14px;border:1px solid var(--gray3);background:transparent;color:var(--white);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;border-radius:var(--radius-sm);min-width:44px;text-align:center;}
+.variant-opt.active{border-color:var(--white);border-width:2px;color:var(--white);}
+.variant-opt.out{opacity:0.35;cursor:not-allowed;position:relative;}
+.variant-opt.out::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-45deg,transparent,transparent 4px,rgba(255,255,255,0.15) 4px,rgba(255,255,255,0.15) 5px);border-radius:var(--radius-sm);}
 .form-group{margin-bottom:16px;}
 .form-group label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);display:block;margin-bottom:8px;}
 .form-group input,.form-group select,.form-group textarea{width:100%;padding:14px;background:var(--bg3);border:1px solid var(--gray3);border-radius:var(--radius-sm);color:var(--white);font-size:14px;outline:none;transition:border-color 0.2s;}
@@ -640,16 +645,45 @@ async function openDetail(id){
   const isWished=wishlist.includes(p.id);
   const varHtml=Object.entries(vtypes).map(([type,opts])=>{
     const isCol=type.toLowerCase().includes('rang');
-    return`<div class="variant-section">
-      <div class="variant-label">${type}</div>
-      <div class="variant-options">
-        ${opts.map(o=>isCol?
-          `<div class="color-opt ${!o.in_stock?'out':''}" style="background:${o.value}" title="${o.value}" onclick="${o.in_stock?`svM('${type}','${o.value}',this,'c')`:''}"></div>`:
-          `<div class="variant-opt ${!o.in_stock?'out':''}" onclick="${o.in_stock?`svM('${type}','${o.value}${o.price_extra>0?' (+'+parseInt(o.price_extra).toLocaleString()+')':''}',this,'t')`:''}">
-            ${o.value}${o.price_extra>0?`<span style="font-size:10px;color:var(--gold)"> +${parseInt(o.price_extra).toLocaleString()}</span>`:''}
+    const isSize=!isCol;
+    if(isCol){
+      // Rang — Uniqlo uslubi doiralar
+      const firstOpt=opts.find(o=>o.in_stock)||opts[0];
+      if(firstOpt&&!window._selV[type])window._selV[type]=firstOpt.value;
+      return `<div class="variant-section">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <div class="variant-label" style="margin:0">${type}:</div>
+          <div style="font-size:13px;font-weight:600;color:var(--white)" id="clabel_${type}">${firstOpt?firstOpt.value:''}</div>
+        </div>
+        <div class="variant-options" style="gap:10px">
+          ${opts.map((o,i)=>{
+            const bg=o.color_image?'':'background:'+o.value+';';
+            const isFirst=o===firstOpt;
+            return `<div class="color-opt ${!o.in_stock?'out':''} ${isFirst?'active':''}"
+              style="${bg}" title="${o.value}"
+              onclick="${o.in_stock?'svM(\''+type+'\',\''+o.value+'\',this,\'c\',\''+( o.color_image||'')+'\')':''}">
+              ${o.color_image?'<img src="'+o.color_image+'" alt="'+o.value+'">':''}
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+    } else {
+      // O'lcham — Uniqlo uslubi to'rtburchak
+      const firstOpt=opts.find(o=>o.in_stock)||opts[0];
+      if(firstOpt&&!window._selV[type])window._selV[type]=firstOpt.value;
+      return `<div class="variant-section">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <div class="variant-label" style="margin:0">Hajmi:</div>
+          <div style="font-size:13px;font-weight:600;color:var(--white)" id="slabel_${type}">${firstOpt?firstOpt.value:''}</div>
+        </div>
+        <div class="variant-options" style="gap:6px">
+          ${opts.map(o=>`<div class="variant-opt ${!o.in_stock?'out':''} ${o===firstOpt?'active':''}"
+            onclick="${o.in_stock?'svM(\''+type+'\',\''+o.value+'\',this,\'t\',\'\')':''}">
+            ${o.value}
           </div>`).join('')}
-      </div>
-    </div>`;
+        </div>
+      </div>`;
+    }
   }).join('');
   document.getElementById('detailContent').innerHTML=`
     <div style="padding-bottom:24px">
@@ -676,17 +710,30 @@ async function openDetail(id){
 function mEl(m){return m.type==='video'?`<video src="${m.url}" controls autoplay muted style="width:100%;height:100%;object-fit:cover"></video>`:`<img src="${m.url}" style="width:100%;height:100%;object-fit:cover">`;}
 function swM(i){const m=window._detAllMedia;if(!m||!m[i])return;document.getElementById('gMain').innerHTML=mEl(m[i]);document.querySelectorAll('.gallery-thumb').forEach((t,j)=>t.classList.toggle('active',j===i));}
 
-function svM(t,v,el,mode){
+function svM(t,v,el,mode,colorImg){
   window._selV[t]=v;
   el.closest('.variant-options').querySelectorAll(mode==='c'?'.color-opt':'.variant-opt').forEach(x=>x.classList.remove('active'));
   el.classList.add('active');
   if(mode==='c'){
-    const varMedia=window._varMedia||[];
-    const matched=varMedia.find(m=>m.variant_value&&m.variant_value.toLowerCase()===v.toLowerCase()&&m.variant_type&&m.variant_type.toLowerCase().includes('rang'));
-    if(matched){
-      document.getElementById('gMain').innerHTML=mEl({url:matched.url,type:matched.media_type});
-      document.querySelectorAll('.gallery-thumb').forEach(t=>t.classList.remove('active'));
+    // Rang label yangilash
+    const clbl=document.getElementById('clabel_'+t);
+    if(clbl)clbl.textContent=v;
+    // Rasm almashishi: avval color_image, keyin variantMedia
+    if(colorImg&&colorImg.startsWith('http')){
+      document.getElementById('gMain').innerHTML=mEl({url:colorImg,type:'image'});
+      document.querySelectorAll('.gallery-thumb').forEach(th=>th.classList.remove('active'));
+    } else {
+      const varMedia=window._varMedia||[];
+      const matched=varMedia.find(m=>m.variant_value&&m.variant_value.toLowerCase()===v.toLowerCase());
+      if(matched){
+        document.getElementById('gMain').innerHTML=mEl({url:matched.url,type:matched.media_type});
+        document.querySelectorAll('.gallery-thumb').forEach(th=>th.classList.remove('active'));
+      }
     }
+  } else {
+    // O'lcham label yangilash
+    const slbl=document.getElementById('slabel_'+t);
+    if(slbl)slbl.textContent=v;
   }
 }
 
