@@ -2,7 +2,7 @@ const BOT = '8754061556:AAHnJ5Shj7DEMIQzuFJKeG4ShG6jC0mytdo';
 const SB  = 'https://zbvpqbyppbonjyegiuke.supabase.co';
 const SK  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpidnBxYnlwcGJvbmp5ZWdpdWtlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNTMxOTcsImV4cCI6MjA5MzgyOTE5N30.wLJyd1oMFAqD78ugLgDniTWVuhL0VLznwt632hW5IIc';
 const ADMIN_ID = '867409233';
-const SITE = 'https://kaleidoscopic-muffin-0fe127.netlify.app';
+const SITE = 'https://ismatilloaskarov92-beep.github.io/glowjp';
 
 const H = { apikey: SK, Authorization: `Bearer ${SK}` };
 
