@@ -73,11 +73,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .variant-opt{padding:8px 16px;border:1px solid var(--gray3);background:transparent;color:var(--white);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;border-radius:var(--radius-sm);}
 .variant-opt.active{border-color:var(--gold);color:var(--gold);}
 .variant-opt.out{opacity:0.3;text-decoration:line-through;cursor:not-allowed;}
-.color-opt{width:36px;height:36px;border-radius:50%;border:2px solid var(--gray3);cursor:pointer;transition:all 0.2s;overflow:hidden;flex-shrink:0;}
-.color-opt img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
-.color-opt.active{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold);}
+.color-opt{width:30px;height:30px;border-radius:50%;border:2px solid var(--gray3);cursor:pointer;transition:all 0.2s;}
+.color-opt.active{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold);}
 .color-opt.out{opacity:0.3;cursor:not-allowed;}
-.color-label{font-size:11px;color:var(--gray);margin-bottom:8px;letter-spacing:1px;}
 /* FORMS */
 .form-group{margin-bottom:16px;}
 .form-group label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);display:block;margin-bottom:8px;}
@@ -404,7 +402,7 @@ const SITE='https://kaleidoscopic-muffin-0fe127.netlify.app';
 let cart=[],editItems=[],allProducts=[],uploadedFile=null,wishlist=[],currentFilter='all',currentSearch='',lastOrder=null;
 
 // DB
-async function dbQ(t,f='',asc=false){const r=await fetch(`${SB}/rest/v1/${t}?${f}&order=${asc?'created_at.asc':'created_at.desc'}`,{headers:H});return r.json();}
+async function dbQ(t,f='',asc=false){const _hasOrd=f.includes('order=');const _ord=_hasOrd?'':('&order='+(asc?'created_at.asc':'created_at.desc'));const r=await fetch(`${SB}/rest/v1/${t}?${f}${_ord}`,{headers:H});return r.json();}
 async function dbI(t,d){const r=await fetch(`${SB}/rest/v1/${t}`,{method:'POST',headers:{...H,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(d)});return r.json();}
 async function dbU(t,id,d){await fetch(`${SB}/rest/v1/${t}?id=eq.${id}`,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify(d)});}
 async function dbD(t,id){await fetch(`${SB}/rest/v1/${t}?id=eq.${id}`,{method:'DELETE',headers:H});}
@@ -540,14 +538,11 @@ async function openDetail(id){
   const varHtml=Object.entries(vtypes).map(([type,opts])=>{
     const isCol=type.toLowerCase().includes('rang');
     return`<div class="variant-section">
-      <div class="variant-label" id="vLabel_${type.replace(/\s/g,'_')}">${type}${isCol&&opts[0]?`: ${opts[0].value}`:''}</div>
+      <div class="variant-label">${type}</div>
       <div class="variant-options">
-        ${opts.map((o,i)=>isCol?
-          `<div class="color-opt ${!o.in_stock?'out':''} ${i===0?'active':''}"
-            onclick="${o.in_stock?`svM('${type}','${o.value}',this,'c',${JSON.stringify(o).replace(/"/g,"'")})`:''}">
-            ${o.color_image?`<img src="${o.color_image}" alt="${o.value}">`:`<div style="width:100%;height:100%;background:${o.value};border-radius:50%"></div>`}
-          </div>`:
-          `<div class="variant-opt ${!o.in_stock?'out':''}" onclick="${o.in_stock?`svM('${type}','${o.value}${o.price_extra>0?' (+'+parseInt(o.price_extra).toLocaleString()+')':''}',this,'t',null)`:''}">
+        ${opts.map(o=>isCol?
+          `<div class="color-opt ${!o.in_stock?'out':''}" style="background:${o.value}" title="${o.value}" onclick="${o.in_stock?`svM('${type}','${o.value}',this,'c')`:''}"></div>`:
+          `<div class="variant-opt ${!o.in_stock?'out':''}" onclick="${o.in_stock?`svM('${type}','${o.value}${o.price_extra>0?' (+'+parseInt(o.price_extra).toLocaleString()+')':''}',this,'t')`:''}">
             ${o.value}${o.price_extra>0?`<span style="font-size:10px;color:var(--gold)"> +${parseInt(o.price_extra).toLocaleString()}</span>`:''}
           </div>`).join('')}
       </div>
@@ -579,22 +574,19 @@ async function openDetail(id){
 function mEl(m){return m.type==='video'?`<video src="${m.url}" controls autoplay muted style="width:100%;height:100%;object-fit:cover"></video>`:`<img src="${m.url}" style="width:100%;height:100%;object-fit:cover">`;}
 function swM(i){const m=window._detAllMedia;if(!m||!m[i])return;document.getElementById('gMain').innerHTML=mEl(m[i]);document.querySelectorAll('.gallery-thumb').forEach((t,j)=>t.classList.toggle('active',j===i));}
 
-function svM(t,v,el,mode,opt){
+function svM(t,v,el,mode){
   window._selV[t]=v;
   el.closest('.variant-options').querySelectorAll(mode==='c'?'.color-opt':'.variant-opt').forEach(x=>x.classList.remove('active'));
   el.classList.add('active');
 
-  // Rang label yangilash
+  // Rang bo'yicha rasm o'zgarishi
   if(mode==='c'){
-    const label=document.getElementById('vLabel_'+t.replace(/\s/g,'_'));
-    if(label)label.textContent=`${t}: ${v}`;
-
-    // Variant rasmi o'zgarishi
     const varMedia=window._varMedia||[];
-    const matched=varMedia.find(m=>m.variant_value&&m.variant_value.toLowerCase()===v.split(' ')[0].toLowerCase());
+    const matched=varMedia.find(m=>m.variant_value&&m.variant_value.toLowerCase()===v.toLowerCase()&&m.variant_type&&m.variant_type.toLowerCase().includes('rang'));
     if(matched){
       document.getElementById('gMain').innerHTML=mEl({url:matched.url,type:matched.media_type});
-      document.querySelectorAll('.gallery-thumb').forEach(th=>th.classList.remove('active'));
+      // Thumbs yangilash
+      document.querySelectorAll('.gallery-thumb').forEach(t=>t.classList.remove('active'));
     }
   }
 }
@@ -836,7 +828,7 @@ async function loadOByPhone(phone){
       </div>
       <div style="font-size:10px;color:var(--gray2);margin-top:8px">${new Date(o.created_at).toLocaleString('uz')}</div>
       ${ce?`<div class="order-actions">
-        <button class="oabtn oa-edit" onclick='openEditOrder(${JSON.stringify(o)})'>✏️ O'zgartirish</button>
+        <button class="oabtn oa-edit" onclick='openEditOrder(JSON.parse(this.dataset.order))' data-order='${JSON.stringify(o).replace(/'/g,"&apos;")}'>✏️ O'zgartirish</button>
         <button class="oabtn oa-cancel" onclick="cancelOrder(${o.id},'${phone}')">✕ Bekor</button>
       </div>`:''}
     </div>`;
@@ -1016,7 +1008,7 @@ function sat(t){
 async function loadAP(){
   const el=document.getElementById('aP');
   el.innerHTML='<div class="empty-state">Yuklanmoqda...</div>';
-  const prods=await dbQ('products','order=created_at.asc');
+  const prods=await dbQ('products','active=eq.true&order=created_at.asc');
   el.innerHTML=`
     <div style="display:flex;gap:8px;margin-bottom:16px">
       <button class="btn-primary" onclick="openProductForm()" style="font-size:11px;padding:10px">+ Yangi</button>
@@ -1161,26 +1153,9 @@ async function renderVM(pid,pname){
     <div style="font-size:11px;letter-spacing:2px;color:var(--gold);margin-bottom:16px">${pname}</div>
     <div class="section-title">Yangi variant</div>
     <div class="form-group"><label>Tur</label>
-      <select id="vT" onchange="toggleColorFields()">
-        <option value="O'lcham">📏 O'lcham</option>
-        <option value="Rang">🎨 Rang</option>
-        <option value="Tur">📦 Tur</option>
-        <option value="Hajm">🧴 Hajm</option>
-      </select>
+      <select id="vT"><option value="O'lcham">📏 O'lcham</option><option value="Rang">🎨 Rang</option><option value="Tur">📦 Tur</option><option value="Hajm">🧴 Hajm</option></select>
     </div>
-    <div class="form-group"><label>Rang nomi (masalan: 42 SARIQ)</label><input type="text" id="vV" placeholder="S, M, L yoki 42 SARIQ"></div>
-    <div id="colorFields" style="display:none">
-      <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:var(--radius-sm);padding:10px;margin-bottom:12px;font-size:11px;color:var(--gray)">
-        💡 Uniqlo'da rangga o'ng klik → <b>Copy image address</b> → pastga paste qiling
-      </div>
-      <div class="form-group"><label>Rang rasmi URL (Uniqlo'dan copy)</label><input type="text" id="vColorImg" placeholder="https://..." oninput="previewColorImg(this.value)"></div>
-      <div id="colorImgPreview" style="display:none;margin-bottom:8px">
-        <img id="colorImgEl" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)">
-      </div>
-      <div class="form-group"><label>Yoki HEX rang kodi</label><input type="text" id="vColorHex" placeholder="#f5f0e0" oninput="previewHex(this.value)">
-        <div id="hexPreview" style="width:40px;height:40px;border-radius:50%;margin-top:8px;border:2px solid var(--gray3);display:none"></div>
-      </div>
-    </div>
+    <div class="form-group"><label>Qiymat (vergul bilan: S,M,L)</label><input type="text" id="vV" placeholder="S, M, L, XL"></div>
     <div class="form-group"><label>Qo'shimcha narx</label><input type="number" id="vP" placeholder="0"></div>
     <button class="btn-primary" onclick="addVars(${pid},'${pname.replace(/'/g,'')}')">Qo'shish</button>
     <div class="divider"></div>
@@ -1201,30 +1176,9 @@ async function renderVM(pid,pname){
 async function addVars(pid,pname){
   const type=document.getElementById('vT').value,raw=document.getElementById('vV').value.trim(),extra=parseInt(document.getElementById('vP').value)||0;
   if(!raw){alert("Qiymat kiriting!");return;}
-  const isColor=type.toLowerCase().includes('rang');
-  const colorImg=isColor?document.getElementById('vColorImg')?.value.trim()||null:null;
-  const colorHex=isColor?document.getElementById('vColorHex')?.value.trim()||null:null;
-  const vals=raw.split(',').map(v=>v.trim()).filter(v=>v);
-  for(const val of vals){
-    await dbI('product_variants',{product_id:pid,variant_type:type,value:val,price_extra:extra,in_stock:true,color_image:colorImg||colorHex||null});
-  }
+  for(const val of raw.split(',').map(v=>v.trim()).filter(v=>v)){await dbI('product_variants',{product_id:pid,variant_type:type,value:val,price_extra:extra,in_stock:true});}
   document.getElementById('vV').value='';document.getElementById('vP').value='';
-  if(colorImg)document.getElementById('vColorImg').value='';
-  if(colorHex)document.getElementById('vColorHex').value='';
   showToast('Qo\'shildi!');await renderVM(pid,pname);
-}
-
-function toggleColorFields(){
-  const isColor=document.getElementById('vT').value.toLowerCase().includes('rang');
-  document.getElementById('colorFields').style.display=isColor?'block':'none';
-}
-function previewColorImg(url){
-  const el=document.getElementById('colorImgPreview'),img=document.getElementById('colorImgEl');
-  if(url){img.src=url;el.style.display='block';}else el.style.display='none';
-}
-function previewHex(hex){
-  const el=document.getElementById('hexPreview');
-  if(hex){el.style.background=hex;el.style.display='block';}else el.style.display='none';
 }
 async function togStock(id,cur,pid,pname,btn){
   await dbU('product_variants',id,{in_stock:!cur});
