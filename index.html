@@ -213,11 +213,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- CART -->
 <div class="panel" id="cartPanel">
   <button class="close-btn" onclick="closeAllPanels()">✕</button>
-  <div class="panel-title">Cart</div>
+  <div class="panel-title">🛒 Savat</div>
   <div id="cartItems"></div>
   <div id="cartTotal"></div>
   <div id="balanceSection"></div>
-  <button class="btn-primary" onclick="openPanel('formPanel')">Checkout →</button>
+  <button class="btn-primary" onclick="openPanel('formPanel')">Buyurtma berish →</button>
 </div>
 
 <!-- ORDER FORM -->
@@ -607,7 +607,7 @@ function renderProducts(){
           <span class="product-price">${parseInt(p.price).toLocaleString()} so'm</span>
           ${isSale?`<span class="product-old-price">${parseInt(p.old_price).toLocaleString()}</span>`:''}
         </div>
-        <button class="add-btn" onclick="event.stopPropagation();quickAdd(${p.id})">+ Add to Cart</button>
+        <button class="add-btn" onclick="event.stopPropagation();quickAdd(${p.id})">+ Savatga qo'shish</button>
       </div>
     </div>`;
   }).join('');
@@ -667,7 +667,7 @@ async function openDetail(id){
       </div>
       ${varHtml}
       <div id="vWarn" style="color:#e74c3c;font-size:12px;margin-bottom:8px;display:none">⚠️ Barcha variantlarni tanlang</div>
-      <button class="btn-primary" onclick="addFromDetail(${p.id})">Add to Cart →</button>
+      <button class="btn-primary" onclick="addFromDetail(${p.id})">Savatga qo'shish →</button>
     </div>`;
   window._detAllMedia=allMedia;
   openPanel('detailPanel');
@@ -698,7 +698,7 @@ function addFromDetail(id){
   const vs=Object.entries(sel).map(([k,v])=>`${k}: ${v}`).join(', ');
   const ex=cart.find(x=>x.id===id&&x.vs===vs);
   if(ex)ex.qty++;else cart.push({...p,qty:1,vs:vs||''});
-  updateBadge();showToast('Added to cart');closeAllPanels();
+  updateBadge();showToast('Savatga qo\'shildi');closeAllPanels();
 }
 function quickAdd(id){
   const p=allProducts.find(x=>x.id===id),ex=cart.find(x=>x.id===id&&!x.vs);
@@ -748,7 +748,7 @@ async function renderCart(){
   document.getElementById('balanceSection').innerHTML=balanceHtml;
   document.getElementById('cartTotal').innerHTML=`
     <div class="cart-total-row">
-      <span style="font-size:11px;letter-spacing:2px;color:var(--gray);text-transform:uppercase">Total</span>
+      <span style="font-size:11px;letter-spacing:2px;color:var(--gray);text-transform:uppercase">Jami</span>
       <span style="font-size:20px;font-weight:700;color:var(--gold)" id="cartTotalAmt">${total.toLocaleString()} so'm</span>
     </div>`;
 }
@@ -1372,7 +1372,7 @@ async function upMF(input,type,pid,pname,vType,vVal){
 }
 async function delM(mid,pid,pname){if(!confirm("O'chirishni tasdiqlaysizmi?"))return;await dbD('product_media',mid);showToast("O'chirildi");await renderMM(pid,pname);await loadProducts(currentFilter);}
 
-function openProductForm(p=null){
+async function openProductForm(p=null){
   pColors=[];pSizes=[];
   document.getElementById('pEditId').value=p?p.id:'';
   document.getElementById('productFormTitle').textContent=p?'Tahrirlash':'Yangi mahsulot';
@@ -1390,9 +1390,16 @@ function openProductForm(p=null){
   if(p&&p.image_url){img.src=p.image_url;img.style.display='block';document.getElementById('imgUploadText').textContent='Mavjud rasm';}
   else{img.style.display='none';document.getElementById('imgUploadText').textContent='📷 Rasm tanlang';}
   uploadedFile=null;
-  renderPColors();
-  renderPSizes();
-  openPanel('productFormPanel');
+  if(p&&p.id){
+    const vars=await dbQ('product_variants','product_id=eq.'+p.id+'&order=variant_type.asc,created_at.asc');
+    if(Array.isArray(vars)){
+      vars.forEach(function(v){
+        if(v.variant_type==='Rang'){pColors.push({id:Date.now()+Math.random(),name:v.value,url:v.color_image||'',inStock:v.in_stock!==false});}
+        else{if(!pSizes.find(function(s){return s.val===v.value;}))pSizes.push({val:v.value,inStock:v.in_stock!==false});}
+      });
+    }
+  }
+  renderPColors();renderPSizes();openPanel('productFormPanel');
 }
 
 async function saveProduct(){
@@ -1425,20 +1432,9 @@ async function saveProduct(){
     if(Array.isArray(res)&&res[0])savedId=res[0].id;
   }
 
-  // Ranglarni product_variants ga saqlash
-  if(savedId&&pColors.length){
-    for(const c of pColors){
-      if(c.name||c.url){
-        await dbI('product_variants',{product_id:savedId,variant_type:'Rang',value:c.name||c.url,color_image:c.url||null,price_extra:0,in_stock:true});
-      }
-    }
-  }
-  // O'lchamlarni product_variants ga saqlash
-  if(savedId&&pSizes.length){
-    for(const s of pSizes){
-      await dbI('product_variants',{product_id:savedId,variant_type:"O'lcham",value:s,price_extra:0,in_stock:true});
-    }
-  }
+  if(eid&&savedId){await fetch(SB+'/rest/v1/product_variants?product_id=eq.'+savedId,{method:'DELETE',headers:H});}
+  if(savedId&&pColors.length){for(const c of pColors){if(c.name||c.url){await dbI('product_variants',{product_id:savedId,variant_type:'Rang',value:c.name||c.url,color_image:c.url||null,price_extra:0,in_stock:c.inStock!==false});}}}
+  if(savedId&&pSizes.length){for(const s of pSizes){await dbI('product_variants',{product_id:savedId,variant_type:"O'lcham",value:s.val||s,price_extra:0,in_stock:s.inStock!==false});}}
 
   showToast(eid?'Yangilandi!':'Qo\'shildi!');
   uploadedFile=null;
