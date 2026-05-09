@@ -22,18 +22,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .hbtn{background:var(--bg3);border:1px solid var(--gray3);border-radius:50%;width:38px;height:38px;cursor:pointer;font-size:16px;color:var(--white);display:flex;align-items:center;justify-content:center;position:relative;transition:all 0.2s;}
 .hbtn:hover{border-color:var(--gold);color:var(--gold);}
 .badge{position:absolute;top:-4px;right:-4px;background:var(--gold);color:#000;border-radius:50%;width:17px;height:17px;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;}
-/* SEARCH */
 .search-wrap{background:var(--bg2);padding:10px 16px;border-bottom:1px solid var(--gray3);}
 .search-input{width:100%;padding:10px 14px;background:var(--bg3);border:1px solid var(--gray3);border-radius:var(--radius-sm);color:var(--white);font-size:14px;outline:none;transition:border-color 0.2s;}
 .search-input:focus{border-color:var(--gold);}
 .search-input::placeholder{color:var(--gray);}
-/* CATEGORIES */
 .cats-wrap{background:var(--bg2);border-bottom:1px solid var(--gray3);padding:0 16px;}
 .cats{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;}
 .cats::-webkit-scrollbar{display:none;}
 .cat-btn{flex-shrink:0;padding:12px 14px;background:none;border:none;color:var(--gray);font-size:11px;font-weight:600;cursor:pointer;letter-spacing:1px;text-transform:uppercase;border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap;}
 .cat-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
-/* PRODUCTS */
 .products{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--gray3);}
 .product-card{background:var(--bg2);cursor:pointer;transition:all 0.2s;position:relative;}
 .product-card:hover{background:var(--bg3);}
@@ -51,14 +48,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .product-old-price{font-size:11px;color:var(--gray);text-decoration:line-through;margin-left:6px;}
 .add-btn{width:100%;margin-top:10px;padding:10px;background:transparent;color:var(--gold);border:1px solid var(--gold);font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
 .add-btn:hover{background:var(--gold);color:#000;}
-/* PANELS */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;backdrop-filter:blur(4px);}
 .panel{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--gray3);border-radius:20px 20px 0 0;padding:24px 20px 32px;max-height:90vh;overflow-y:auto;z-index:201;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);}
 .panel.open{transform:translateY(0);}
 .panel-title{font-size:16px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;text-align:center;}
 .close-btn{position:absolute;right:20px;top:20px;background:var(--bg3);border:1px solid var(--gray3);border-radius:50%;width:32px;height:32px;cursor:pointer;color:var(--gray);font-size:16px;display:flex;align-items:center;justify-content:center;}
 .close-btn:hover{border-color:var(--gold);color:var(--gold);}
-/* GALLERY */
 .gallery-main{width:100%;aspect-ratio:3/4;overflow:hidden;background:var(--bg3);margin-bottom:8px;border-radius:var(--radius);}
 .gallery-main img,.gallery-main video{width:100%;height:100%;object-fit:cover;}
 .gallery-thumbs{display:flex;gap:8px;overflow-x:auto;margin-bottom:16px;scrollbar-width:none;}
@@ -66,7 +61,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .gallery-thumb{width:64px;height:80px;flex-shrink:0;border-radius:var(--radius-sm);overflow:hidden;cursor:pointer;border:2px solid var(--gray3);background:var(--bg3);transition:all 0.2s;}
 .gallery-thumb.active{border-color:var(--gold);}
 .gallery-thumb img,.gallery-thumb video{width:100%;height:100%;object-fit:cover;}
-/* VARIANTS */
 .variant-section{margin-bottom:16px;}
 .variant-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:8px;}
 .variant-options{display:flex;flex-wrap:wrap;gap:8px;}
@@ -76,20 +70,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .color-opt{width:30px;height:30px;border-radius:50%;border:2px solid var(--gray3);cursor:pointer;transition:all 0.2s;}
 .color-opt.active{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold);}
 .color-opt.out{opacity:0.3;cursor:not-allowed;}
-/* FORMS */
 .form-group{margin-bottom:16px;}
 .form-group label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);display:block;margin-bottom:8px;}
 .form-group input,.form-group select,.form-group textarea{width:100%;padding:14px;background:var(--bg3);border:1px solid var(--gray3);border-radius:var(--radius-sm);color:var(--white);font-size:14px;outline:none;transition:border-color 0.2s;}
 .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold);}
 .form-group select option{background:var(--bg2);}
-/* BUTTONS */
 .btn-primary{width:100%;padding:16px;background:var(--gold);color:#000;border:none;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;border-radius:var(--radius-sm);margin-top:8px;}
 .btn-primary:hover{background:var(--gold2);}
 .btn-secondary{width:100%;padding:14px;background:transparent;color:var(--gold);border:1px solid var(--gold);font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;border-radius:var(--radius-sm);margin-top:8px;}
 .btn-secondary:hover{background:rgba(201,168,76,0.1);}
 .btn-success{width:100%;padding:14px;background:var(--success);color:#fff;border:none;font-size:12px;font-weight:700;cursor:pointer;border-radius:var(--radius-sm);margin-top:8px;}
 .btn-danger-outline{width:100%;padding:12px;background:transparent;color:var(--danger);border:1px solid var(--danger);font-size:12px;font-weight:700;cursor:pointer;border-radius:var(--radius-sm);margin-top:8px;}
-/* CART */
 .cart-item{display:flex;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid var(--gray3);}
 .cart-item-img{width:56px;height:70px;border-radius:var(--radius-sm);overflow:hidden;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;}
 .cart-item-img img{width:100%;height:100%;object-fit:cover;}
@@ -103,13 +94,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .remove-btn{background:none;border:none;color:var(--gray);font-size:18px;cursor:pointer;padding:4px;}
 .remove-btn:hover{color:var(--danger);}
 .cart-total-row{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-top:1px solid var(--gray3);margin-top:8px;}
-/* PAYMENT */
 .payment-card{background:var(--bg3);border-radius:var(--radius);padding:20px;margin-bottom:16px;border:1px solid var(--gold);}
 .payment-card-num{font-size:20px;font-weight:700;letter-spacing:3px;color:var(--white);margin:8px 0;}
 .payment-amount{font-size:24px;font-weight:700;color:var(--gold);margin:8px 0;}
 .copy-btn{display:flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(201,168,76,0.15);border:1px solid var(--gold);border-radius:var(--radius-sm);color:var(--gold);font-size:12px;font-weight:700;cursor:pointer;margin-top:8px;width:100%;justify-content:center;}
 .balance-card{background:rgba(39,174,96,0.1);border:1px solid var(--success);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;}
-/* ORDER CARDS */
 .order-card{background:var(--bg3);border-radius:var(--radius);padding:16px;margin-bottom:12px;border:1px solid var(--gray3);}
 .order-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
 .order-num{font-size:14px;font-weight:700;color:var(--gold);letter-spacing:1px;}
@@ -125,7 +114,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .oabtn{flex:1;padding:10px;border:none;border-radius:var(--radius-sm);font-size:11px;font-weight:700;cursor:pointer;letter-spacing:1px;text-transform:uppercase;}
 .oa-edit{background:rgba(201,168,76,0.15);color:var(--gold);}
 .oa-cancel{background:rgba(192,57,43,0.15);color:#e74c3c;}
-/* ADMIN */
 .admin-tabs{display:flex;gap:0;border-bottom:1px solid var(--gray3);margin-bottom:20px;overflow-x:auto;}
 .atab{flex-shrink:0;padding:10px 12px;background:none;border:none;color:var(--gray);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;}
 .atab.active{color:var(--gold);border-bottom-color:var(--gold);}
@@ -143,15 +131,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .pb-edit{background:rgba(201,168,76,0.2);color:var(--gold);}
 .pb-del{background:rgba(192,57,43,0.2);color:#e74c3c;}
 .inactive-tag{background:rgba(192,57,43,0.15);color:#e74c3c;font-size:9px;padding:2px 6px;border-radius:3px;margin-left:4px;}
-/* STATS */
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
 .stat-card{background:var(--bg3);border-radius:var(--radius-sm);padding:14px;border:1px solid var(--gray3);text-align:center;}
 .stat-num{font-size:22px;font-weight:700;color:var(--gold);}
 .stat-label{font-size:10px;color:var(--gray);letter-spacing:1px;text-transform:uppercase;margin-top:4px;}
-/* APPEAL */
 .appeal-card{background:var(--bg3);border-radius:var(--radius);padding:14px;margin-bottom:10px;border-left:3px solid var(--gold);}
 .appeal-reply{background:rgba(39,174,96,0.1);border-radius:var(--radius-sm);padding:10px;margin-top:8px;font-size:12px;color:#58d68d;border:1px solid rgba(39,174,96,0.2);}
-/* MEDIA */
 .upload-area{border:1px dashed var(--gray3);border-radius:var(--radius-sm);padding:16px;text-align:center;cursor:pointer;color:var(--gray);font-size:13px;margin-bottom:8px;transition:all 0.2s;}
 .upload-area:hover{border-color:var(--gold);color:var(--gold);}
 .media-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
@@ -159,19 +144,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .media-item img,.media-item video{width:100%;height:100%;object-fit:cover;}
 .media-del{position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.7);color:#e74c3c;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;}
 .media-type{position:absolute;top:4px;left:4px;background:rgba(0,0,0,0.7);color:var(--gold);border-radius:3px;padding:2px 5px;font-size:9px;font-weight:700;}
-/* VARIANTS MANAGER */
 .variant-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--gray3);}
 .vcolor-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--gray3);flex-shrink:0;}
 .stock-btn{padding:4px 10px;border:none;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer;}
 .stock-yes{background:rgba(39,174,96,0.2);color:#58d68d;}
 .stock-no{background:rgba(192,57,43,0.2);color:#e74c3c;}
-/* TAG SELECTOR */
 .tag-opt{padding:8px 14px;border:1px solid var(--gray3);border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;color:var(--gray);}
 .tag-opt.active{background:var(--gold);color:#000;border-color:var(--gold);}
-/* SUCCESS */
 .success-screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:400;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px;}
 .success-screen.show{display:flex;}
-/* MISC */
 .empty-state{text-align:center;padding:40px 20px;color:var(--gray);font-size:13px;}
 .divider{height:1px;background:var(--gray3);margin:16px 0;}
 .section-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
@@ -325,7 +306,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="panel-title" id="productFormTitle">Yangi mahsulot</div>
   <input type="hidden" id="pEditId">
 
-  <!-- RASM -->
   <div class="form-group">
     <label>Asosiy rasm</label>
     <div class="img-upload-area" onclick="document.getElementById('imgInput').click()">
@@ -336,7 +316,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <input type="hidden" id="pImageUrl">
   </div>
 
-  <!-- ASOSIY MA'LUMOTLAR -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
     <div class="form-group"><label>Emoji</label><input type="text" id="pEmoji" placeholder="👗" maxlength="2"></div>
     <div class="form-group"><label>Holat</label>
@@ -369,7 +348,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </div>
 
-  <!-- TEGLAR -->
   <div class="form-group">
     <label>Qo'shimcha teglar</label>
     <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px" id="tagSelector">
@@ -383,12 +361,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <input type="hidden" id="pTags">
   </div>
 
-  <!-- RANGLAR -->
+  <!-- RANGLAR (bitta formada) -->
   <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);padding:10px 0 8px;border-top:1px solid var(--gray3);margin-top:4px">Ranglar</div>
   <div id="pColorList"></div>
   <button class="btn-secondary" onclick="addPColor()" style="margin-top:0;padding:10px;font-size:11px">+ Rang qo'shish</button>
 
-  <!-- O'LCHAMLAR -->
+  <!-- O'LCHAMLAR (bitta formada) -->
   <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);padding:10px 0 8px;border-top:1px solid var(--gray3);margin-top:8px">O'lchamlar</div>
   <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px" id="pSizeChips"></div>
   <div style="display:flex;gap:8px">
@@ -402,6 +380,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
   <button class="btn-primary" id="pSubmitBtn" onclick="saveProduct()" style="margin-top:16px">Saqlash →</button>
 </div>
+
 <!-- MEDIA PANEL -->
 <div class="panel" id="mediaPanel">
   <button class="close-btn" onclick="openPanel('adminPanel');loadAdminPanel()">✕</button>
@@ -441,11 +420,27 @@ const SITE='https://kaleidoscopic-muffin-0fe127.netlify.app';
 
 let cart=[],editItems=[],allProducts=[],uploadedFile=null,wishlist=[],currentFilter='all',currentSearch='',lastOrder=null;
 
+// ── PRODUCT FORM STATE (global, funksiya tashqarisida) ──────────────────────
+let pColors=[];
+let pSizes=[];
+
 // DB
-async function dbQ(t,f='',asc=false){const _hasOrd=f.includes('order=');const _ord=_hasOrd?'':('&order='+(asc?'created_at.asc':'created_at.desc'));const r=await fetch(`${SB}/rest/v1/${t}?${f}${_ord}`,{headers:H});return r.json();}
-async function dbI(t,d){const r=await fetch(`${SB}/rest/v1/${t}`,{method:'POST',headers:{...H,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(d)});return r.json();}
-async function dbU(t,id,d){await fetch(`${SB}/rest/v1/${t}?id=eq.${id}`,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify(d)});}
-async function dbD(t,id){await fetch(`${SB}/rest/v1/${t}?id=eq.${id}`,{method:'DELETE',headers:H});}
+async function dbQ(t,f='',asc=false){
+  const _hasOrd=f.includes('order=');
+  const _ord=_hasOrd?'':('&order='+(asc?'created_at.asc':'created_at.desc'));
+  const r=await fetch(`${SB}/rest/v1/${t}?${f}${_ord}`,{headers:H});
+  return r.json();
+}
+async function dbI(t,d){
+  const r=await fetch(`${SB}/rest/v1/${t}`,{method:'POST',headers:{...H,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(d)});
+  return r.json();
+}
+async function dbU(t,id,d){
+  await fetch(`${SB}/rest/v1/${t}?id=eq.${id}`,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify(d)});
+}
+async function dbD(t,id){
+  await fetch(`${SB}/rest/v1/${t}?id=eq.${id}`,{method:'DELETE',headers:H});
+}
 async function up(file,b='products'){
   const fn=`${b}_${Date.now()}.${file.name.split('.').pop()}`;
   const r=await fetch(`${SB}/storage/v1/object/${b}/${fn}`,{method:'POST',headers:{...H,'Content-Type':file.type},body:file});
@@ -458,10 +453,87 @@ async function tg(msg,markup=null){
 }
 
 function previewImage(inp){
-  if(!inp.files[0])return;uploadedFile=inp.files[0];
+  if(!inp.files[0])return;
+  uploadedFile=inp.files[0];
   const r=new FileReader();
-  r.onload=e=>{const i=document.getElementById('imgPreview');i.src=e.target.result;i.style.display='block';document.getElementById('imgUploadText').textContent='✅ Tanlandi';};
+  r.onload=e=>{
+    const i=document.getElementById('imgPreview');
+    i.src=e.target.result;i.style.display='block';
+    document.getElementById('imgUploadText').textContent='✅ Tanlandi';
+  };
   r.readAsDataURL(uploadedFile);
+}
+
+// ── RANGLAR (product form) ──────────────────────────────────────────────────
+function addPColor(){
+  const id=Date.now();
+  pColors.push({id,name:'',url:'',inStock:true});
+  renderPColors();
+}
+function removePColor(id){
+  pColors=pColors.filter(c=>c.id!==id);
+  renderPColors();
+}
+function upPColor(id,field,val){
+  const c=pColors.find(x=>x.id===id);
+  if(c)c[field]=val;
+}
+function updPDot(id){
+  const c=pColors.find(x=>x.id===id);
+  if(!c)return;
+  const dot=document.getElementById('pdot_'+id);
+  if(!dot)return;
+  dot.innerHTML=c.url
+    ?'<img src="'+c.url+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'
+    :'<span style="color:var(--gray);font-size:10px">?</span>';
+}
+function renderPColors(){
+  const list=document.getElementById('pColorList');
+  if(!list)return;
+  if(!pColors.length){
+    list.innerHTML='<div style="font-size:11px;color:var(--gray);text-align:center;padding:10px;border:1px dashed var(--gray3);border-radius:var(--radius-sm);margin-bottom:8px">Rang qo\'shilmagan</div>';
+    return;
+  }
+  list.innerHTML=pColors.map(c=>`
+    <div style="display:flex;gap:8px;align-items:center;padding:8px 10px;background:var(--bg3);border-radius:var(--radius-sm);border:1px solid var(--gray3);margin-bottom:6px">
+      <div id="pdot_${c.id}" style="width:28px;height:28px;border-radius:50%;flex-shrink:0;border:2px solid var(--gray3);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--gray)">
+        ${c.url?'<img src="'+c.url+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">':'?'}
+      </div>
+      <input type="text" placeholder="Rang nomi" value="${c.name}"
+        oninput="upPColor(${c.id},'name',this.value)"
+        style="width:90px;padding:7px 8px;background:var(--bg);border:1px solid var(--gray3);border-radius:4px;color:var(--white);font-size:12px;outline:none">
+      <input type="text" placeholder="Rasm URL" value="${c.url}"
+        oninput="upPColor(${c.id},'url',this.value);updPDot(${c.id})"
+        style="flex:1;padding:7px 8px;background:var(--bg);border:1px solid var(--gray3);border-radius:4px;color:var(--white);font-size:12px;outline:none">
+      <button onclick="removePColor(${c.id})" style="background:none;border:none;color:var(--gray);font-size:18px;cursor:pointer;padding:0 4px;line-height:1">&times;</button>
+    </div>`).join('');
+}
+
+// ── O'LCHAMLAR (product form) ───────────────────────────────────────────────
+function addPSize(){
+  const inp=document.getElementById('pSizeInput');
+  const val=inp.value.trim();
+  if(!val)return;
+  val.split(',').map(s=>s.trim()).filter(Boolean).forEach(s=>{
+    if(!pSizes.includes(s))pSizes.push(s);
+  });
+  inp.value='';
+  renderPSizes();
+}
+function removePSize(s){
+  pSizes=pSizes.filter(x=>x!==s);
+  renderPSizes();
+}
+function renderPSizes(){
+  const el=document.getElementById('pSizeChips');
+  if(!el)return;
+  if(!pSizes.length){el.innerHTML='';return;}
+  el.innerHTML=pSizes.map(s=>
+    `<div style="padding:6px 12px;border:1px solid var(--gold);border-radius:4px;font-size:12px;font-weight:600;color:var(--gold);display:flex;align-items:center;gap:6px">
+      ${s}
+      <span onclick="removePSize('${s}')" style="color:var(--danger);cursor:pointer;font-size:14px;line-height:1">&times;</span>
+    </div>`
+  ).join('');
 }
 
 // WISHLIST
@@ -469,7 +541,11 @@ function loadWishlist(){
   try{wishlist=JSON.parse(localStorage.getItem('gjp_wish')||'[]');}catch{wishlist=[];}
   updateWishBadge();
 }
-function updateWishBadge(){const b=document.getElementById('wishBadge');b.textContent=wishlist.length;b.style.display=wishlist.length>0?'flex':'none';}
+function updateWishBadge(){
+  const b=document.getElementById('wishBadge');
+  b.textContent=wishlist.length;
+  b.style.display=wishlist.length>0?'flex':'none';
+}
 function toggleWish(id,el){
   const idx=wishlist.indexOf(id);
   if(idx>-1)wishlist.splice(idx,1);else wishlist.push(id);
@@ -496,13 +572,8 @@ async function openWishlist(){
     </div>`).join('');
 }
 
-// SEARCH
-function searchProducts(q){
-  currentSearch=q.toLowerCase();
-  renderProducts();
-}
+function searchProducts(q){currentSearch=q.toLowerCase();renderProducts();}
 
-// PRODUCTS
 async function loadProducts(filter='all'){
   currentFilter=filter;
   let f='active=eq.true';
@@ -518,7 +589,7 @@ async function loadProducts(filter='all'){
 
 function renderProducts(){
   let prods=Array.isArray(allProducts)?allProducts:[];
-  if(currentSearch)prods=prods.filter(p=>p.name.toLowerCase().includes(currentSearch)||( p.description&&p.description.toLowerCase().includes(currentSearch)));
+  if(currentSearch)prods=prods.filter(p=>p.name.toLowerCase().includes(currentSearch)||(p.description&&p.description.toLowerCase().includes(currentSearch)));
   if(!prods.length){document.getElementById('productsGrid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--gray);letter-spacing:2px;font-size:12px">MAHSULOTLAR YO\'Q</div>';return;}
   document.getElementById('productsGrid').innerHTML=prods.map(p=>{
     const isWished=wishlist.includes(p.id);
@@ -544,7 +615,6 @@ function renderProducts(){
 
 function filterCat(c,b){document.querySelectorAll('.cat-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');loadProducts(c);}
 
-// PRODUCT DETAIL
 async function openDetail(id){
   const p=allProducts.find(x=>x.id===id);if(!p)return;
   const[media,variants]=await Promise.all([
@@ -553,28 +623,21 @@ async function openDetail(id){
   ]);
   const mList=Array.isArray(media)?media:[];
   const vList=Array.isArray(variants)?variants:[];
-
-  // Media - asosiy (variant_value yo'q) va variant bog'liq
   const mainMedia=mList.filter(m=>!m.variant_value);
   const variantMedia=mList.filter(m=>m.variant_value);
-
   const allMedia=[];
   if(p.image_url)allMedia.push({url:p.image_url,type:'image',variant:null});
   mainMedia.forEach(m=>allMedia.push({url:m.url,type:m.media_type,variant:null}));
-
   const mainHtml=allMedia.length?mEl(allMedia[0]):`<div style="font-size:80px;display:flex;align-items:center;justify-content:center;height:100%">${p.emoji||'🛍️'}</div>`;
   const thumbs=allMedia.length>1?allMedia.map((m,i)=>`
     <div class="gallery-thumb ${i===0?'active':''}" onclick="swM(${i})" id="th_${i}">
       ${m.type==='video'?`<div style="position:relative;height:100%"><video src="${m.url}" style="width:100%;height:100%;object-fit:cover"></video><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.4);color:var(--gold);font-size:14px">▶</div></div>`:`<img src="${m.url}">`}
     </div>`).join(''):'';
-
   const vtypes={};
   vList.forEach(v=>{if(!vtypes[v.variant_type])vtypes[v.variant_type]=[];vtypes[v.variant_type].push(v);});
   window._selV={};window._detP=p;window._detM=allMedia;window._detVT=Object.keys(vtypes);window._varMedia=variantMedia;
-
   const isSale=p.old_price&&p.old_price>p.price;
   const isWished=wishlist.includes(p.id);
-
   const varHtml=Object.entries(vtypes).map(([type,opts])=>{
     const isCol=type.toLowerCase().includes('rang');
     return`<div class="variant-section">
@@ -588,7 +651,6 @@ async function openDetail(id){
       </div>
     </div>`;
   }).join('');
-
   document.getElementById('detailContent').innerHTML=`
     <div style="padding-bottom:24px">
       <div class="gallery-main" id="gMain">${mainHtml}</div>
@@ -618,14 +680,11 @@ function svM(t,v,el,mode){
   window._selV[t]=v;
   el.closest('.variant-options').querySelectorAll(mode==='c'?'.color-opt':'.variant-opt').forEach(x=>x.classList.remove('active'));
   el.classList.add('active');
-
-  // Rang bo'yicha rasm o'zgarishi
   if(mode==='c'){
     const varMedia=window._varMedia||[];
     const matched=varMedia.find(m=>m.variant_value&&m.variant_value.toLowerCase()===v.toLowerCase()&&m.variant_type&&m.variant_type.toLowerCase().includes('rang'));
     if(matched){
       document.getElementById('gMain').innerHTML=mEl({url:matched.url,type:matched.media_type});
-      // Thumbs yangilash
       document.querySelectorAll('.gallery-thumb').forEach(t=>t.classList.remove('active'));
     }
   }
@@ -647,7 +706,6 @@ function quickAdd(id){
   updateBadge();showToast('Added to cart');
 }
 
-// CART
 function updateBadge(){const t=cart.reduce((s,i)=>s+i.qty,0),b=document.getElementById('cartBadge');b.textContent=t;b.style.display=t>0?'flex':'none';}
 
 async function renderCart(){
@@ -668,10 +726,7 @@ async function renderCart(){
       </div>
       <button class="remove-btn" onclick="rC(${idx})">✕</button>
     </div>`).join('');
-
   const total=cart.reduce((s,i)=>s+parseInt(i.price)*i.qty,0);
-
-  // Balans tekshirish
   const phone=localStorage.getItem('gjp_phone')||'';
   let balanceHtml='';
   if(phone){
@@ -684,7 +739,7 @@ async function renderCart(){
         <div style="font-size:13px;color:var(--gray)">Mavjud: <strong style="color:#58d68d">${bal.toLocaleString()} so'm</strong></div>
         <div style="font-size:12px;color:var(--gray);margin-top:4px">Chegirma: -${discount.toLocaleString()} so'm</div>
         <label style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer">
-          <input type="checkbox" id="useBalance" onchange="updateCartTotal(${total},${bal})"> 
+          <input type="checkbox" id="useBalance" onchange="updateCartTotal(${total},${bal})">
           <span style="font-size:12px;color:var(--white)">Balansdan foydalanish</span>
         </label>
       </div>`;
@@ -703,7 +758,6 @@ function updateCartTotal(total,bal){
   const final=usebal?Math.max(0,total-bal):total;
   document.getElementById('cartTotalAmt').textContent=final.toLocaleString()+' so\'m';
 }
-
 function cQ(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);updateBadge();renderCart();}
 function rC(i){cart.splice(i,1);updateBadge();renderCart();}
 
@@ -711,7 +765,6 @@ function togglePanel(id){const o=document.getElementById(id).classList.contains(
 function openPanel(id){closeAllPanels();document.getElementById(id).classList.add('open');document.getElementById('overlay').style.display='block';}
 function closeAllPanels(){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('open'));document.getElementById('overlay').style.display='none';}
 
-// PAYMENT
 function showPaymentPanel(order){
   const total=order.total;
   document.getElementById('paymentContent').innerHTML=`
@@ -748,14 +801,8 @@ function showPaymentPanel(order){
   openPanel('paymentPanel');
 }
 
-function copyCard(){
-  navigator.clipboard.writeText(CARD.replace(/\s/g,''));
-  showToast('✅ Karta raqami nusxalandi!');
-}
-function copyAmount(amt){
-  navigator.clipboard.writeText(String(amt));
-  showToast('✅ Summa nusxalandi!');
-}
+function copyCard(){navigator.clipboard.writeText(CARD.replace(/\s/g,''));showToast('✅ Karta raqami nusxalandi!');}
+function copyAmount(amt){navigator.clipboard.writeText(String(amt));showToast('✅ Summa nusxalandi!');}
 
 function previewCheck(inp){
   if(!inp.files[0])return;
@@ -767,35 +814,20 @@ function previewCheck(inp){
 async function confirmPayment(orderNum,amount,name,phone){
   const btn=document.querySelector('#paymentContent .btn-success');
   btn.textContent='Yuborilmoqda...';btn.disabled=true;
-
   let checkUrl=null;
   const checkFile=document.getElementById('checkImg').files[0];
   if(checkFile)checkUrl=await up(checkFile,'products');
-
-  // To'lov yozuvi
   const orders=await dbQ('orders',`order_number=eq.${orderNum}`);
   const orderId=Array.isArray(orders)&&orders[0]?orders[0].id:null;
-
-  await dbI('payments',{
-    order_id:orderId,order_number:orderNum,
-    customer_name:name,phone,amount,
-    status:'Kutilmoqda',check_image:checkUrl||null
-  });
-
-  // Adminga inline tugmalar bilan xabar
+  await dbI('payments',{order_id:orderId,order_number:orderNum,customer_name:name,phone,amount,status:'Kutilmoqda',check_image:checkUrl||null});
   const msg=`💳 <b>TO'LOV AMALGA OSHIRILDI</b>\n\n🔖 ${orderNum}\n👤 ${name}\n📞 ${phone}\n💰 <b>${parseInt(amount).toLocaleString()} so'm</b>${checkUrl?'\n📸 Chek yuklandi':''}`;
-  const markup={inline_keyboard:[[
-    {text:'✅ To\'lovni tasdiqlash',callback_data:`pay_confirm_${orderNum}`},
-    {text:'❌ Rad etish',callback_data:`pay_reject_${orderNum}`}
-  ]]};
+  const markup={inline_keyboard:[[{text:'✅ To\'lovni tasdiqlash',callback_data:`pay_confirm_${orderNum}`},{text:'❌ Rad etish',callback_data:`pay_reject_${orderNum}`}]]};
   await tg(msg,markup);
-
   showToast('✅ To\'lov ma\'lumotlari yuborildi!');
   closeAllPanels();
   btn.textContent='✅ To\'lov qildim';btn.disabled=false;
 }
 
-// APPEAL
 async function submitAppeal(){
   const name=document.getElementById('apName').value.trim(),phone=document.getElementById('apPhone').value.trim();
   const type=document.getElementById('apType').value,msg=document.getElementById('apMessage').value.trim();
@@ -826,7 +858,6 @@ async function loadMyAppeals(){
     </div>`).join('');
 }
 
-// MY ORDERS
 async function openMyOrders(){
   openPanel('ordersPanel');
   const phone=localStorage.getItem('gjp_phone')||'';
@@ -847,12 +878,9 @@ async function loadOByPhone(phone){
   document.getElementById('myOrdersList').innerHTML='<div class="empty-state">Yuklanmoqda...</div>';
   const orders=await dbQ('orders',`phone=eq.${encodeURIComponent(phone)}`);
   if(!Array.isArray(orders)||!orders.length){document.getElementById('myOrdersList').innerHTML='<div class="empty-state">Buyurtma topilmadi</div>';return;}
-
-  // Balans ko'rsatish
   const balRes=await dbQ('customer_balance',`phone=eq.${encodeURIComponent(phone)}`);
   const bal=Array.isArray(balRes)&&balRes.length?balRes[0].balance:0;
   const balHtml=bal>0?`<div class="balance-card" style="margin-bottom:16px"><div style="font-size:12px;font-weight:700;color:#58d68d">🎁 Sizning balansIngiz</div><div style="font-size:20px;font-weight:700;color:#58d68d;margin-top:4px">${bal.toLocaleString()} so'm</div><div style="font-size:11px;color:var(--gray);margin-top:4px">Keyingi xaridda avtomatik qo'llaniladi</div></div>`:'';
-
   document.getElementById('myOrdersList').innerHTML=balHtml+orders.map(o=>{
     const items=JSON.parse(o.items||'[]');
     const sc=o.status==='Qabul qilindi'?'s-new':o.status==='To\'lov kutilmoqda'?'s-pay':o.status==="Jo'natildi"?'s-sent':o.status==='Yetkazildi'?'s-done':'s-cancel';
@@ -934,8 +962,6 @@ async function submitOrder(){
   const note=document.getElementById('fNote').value.trim();
   if(!name||!phone||!addr||!pay){alert("Barcha maydonlarni to'ldiring!");return;}
   const btn=document.getElementById('submitBtn');btn.textContent='...';btn.disabled=true;
-
-  // Balans tekshirish
   let useBalance=document.getElementById('useBalance')?.checked||false;
   let balDiscount=0;
   if(useBalance){
@@ -944,7 +970,6 @@ async function submitOrder(){
       balDiscount=Math.min(balRes[0].balance,cart.reduce((s,i)=>s+parseInt(i.price)*i.qty,0));
     }
   }
-
   if(eid){
     if(!editItems.length){alert("Kamida 1 mahsulot!");btn.textContent="Saqlash →";btn.disabled=false;return;}
     const total=editItems.reduce((s,i)=>s+parseInt(i.price)*i.qty,0);
@@ -957,28 +982,16 @@ async function submitOrder(){
     const rawTotal=cart.reduce((s,i)=>s+parseInt(i.price)*i.qty,0);
     const total=rawTotal-balDiscount;
     const items=cart.map(i=>({id:i.id,emoji:i.emoji||'🛍️',name:i.name,qty:i.qty,price:i.price,vs:i.vs||''}));
-
-    const result=await dbI('orders',{order_number:onum,customer_name:name,phone,address:addr,payment_method:pay,note,items:JSON.stringify(items),total,status:'To\'lov kutilmoqda'});
-
-    // Balans ishlatilsa kamayt
+    await dbI('orders',{order_number:onum,customer_name:name,phone,address:addr,payment_method:pay,note,items:JSON.stringify(items),total,status:'To\'lov kutilmoqda'});
     if(useBalance&&balDiscount>0){
       const balRes=await dbQ('customer_balance',`phone=eq.${encodeURIComponent(phone)}`);
       if(Array.isArray(balRes)&&balRes.length){
-        const newBal=balRes[0].balance-balDiscount;
-        await dbU('customer_balance',balRes[0].id,{balance:newBal});
+        await dbU('customer_balance',balRes[0].id,{balance:balRes[0].balance-balDiscount});
       }
     }
-
     const msg=`🛍️ <b>YANGI BUYURTMA</b> — GLOWJP\n\n🔖 ${onum}\n👤 ${name}\n📞 ${phone}\n📍 ${addr}\n💳 ${pay}\n\n📦 ${items.map(i=>`${i.name}${i.vs?' ('+i.vs+')':''} ×${i.qty} = ${(parseInt(i.price)*i.qty).toLocaleString()} so'm`).join('\n')}${balDiscount>0?`\n💚 Balans chegirmasi: -${balDiscount.toLocaleString()} so'm`:''}\n\n💰 <b>JAMI: ${total.toLocaleString()} so'm</b>${note?'\n💬 '+note:''}`;
-    const markup={inline_keyboard:[[
-      {text:'✅ Qabul',callback_data:`status_${onum}_accepted`},
-      {text:"🚚 Jo'natildi",callback_data:`status_${onum}_sent`}
-    ],[
-      {text:'❌ Bekor',callback_data:`status_${onum}_cancel`},
-      {text:'📋 Barchasi',url:SITE}
-    ]]};
+    const markup={inline_keyboard:[[{text:'✅ Qabul',callback_data:`status_${onum}_accepted`},{text:"🚚 Jo'natildi",callback_data:`status_${onum}_sent`}],[{text:'❌ Bekor',callback_data:`status_${onum}_cancel`},{text:'📋 Barchasi',url:SITE}]]};
     await tg(msg,markup);
-
     localStorage.setItem('gjp_phone',phone);
     lastOrder={order_number:onum,total,customer_name:name,phone};
     document.getElementById('successOrderNum').textContent=onum;
@@ -1003,7 +1016,6 @@ function afterSuccess(a){
   else if(a==='orders')openMyOrders();
 }
 
-// TAGS
 function toggleTag(tag){
   const el=document.getElementById('tag_'+tag);el.classList.toggle('active');
   const active=[...document.querySelectorAll('.tag-opt.active')].map(x=>x.id.replace('tag_',''));
@@ -1015,7 +1027,6 @@ function setTags(tags){
   else document.getElementById('pTags').value='';
 }
 
-// ADMIN
 function openAdmin(){openPanel('adminPanel');}
 function checkAdmin(){if(document.getElementById('adminPass').value===APASS)loadAdminPanel();else alert("Parol noto'g'ri!");}
 
@@ -1072,7 +1083,14 @@ async function loadAP(){
       </div>`).join('')}`;
 }
 
-// ADMIN PAYMENTS
+async function delProd(id){
+  if(!confirm("O'chirishni tasdiqlaysizmi?"))return;
+  await dbD('products',id);
+  showToast("O'chirildi");
+  await loadAP();
+  await loadProducts(currentFilter);
+}
+
 async function loadAPay(){
   const el=document.getElementById('aPay');
   el.innerHTML='<div class="empty-state">Yuklanmoqda...</div>';
@@ -1108,65 +1126,49 @@ async function loadAPay(){
 
 async function confirmPay(id,orderNum,phone,amount){
   await dbU('payments',id,{status:'Tasdiqlandi'});
-  await dbU('orders',null,{status:'Qabul qilindi'});
-  // Order'ni order_number bilan yangilash
   const orders=await dbQ('orders',`order_number=eq.${orderNum}`);
   if(Array.isArray(orders)&&orders[0])await dbU('orders',orders[0].id,{status:'Qabul qilindi'});
-
-  // Mijozga Telegram xabar
-  const tgId=localStorage.getItem('gjp_tg_id');
   await tg(`✅ <b>TO'LOV TASDIQLANDI!</b>\n\n🔖 ${orderNum}\n💰 ${parseInt(amount).toLocaleString()} so'm\n\nBuyurtmangiz tez orada jo'natiladi 🌸`);
-  showToast('✅ To\'lov tasdiqlandi!');
-  await loadAPay();
+  showToast('✅ To\'lov tasdiqlandi!');await loadAPay();
 }
-
 async function rejectPay(id,orderNum,phone,amount){
   if(!confirm("To'lovni rad etmoqchimisiz?"))return;
   await dbU('payments',id,{status:'Rad etildi'});
   await tg(`❌ <b>TO'LOV RAD ETILDI</b>\n\n🔖 ${orderNum}\n💰 ${parseInt(amount).toLocaleString()} so'm\n\nIltimos, qayta urinib ko'ring yoki @LYF29 ga murojaat qiling.`);
-  showToast('❌ Rad etildi');
-  await loadAPay();
+  showToast('❌ Rad etildi');await loadAPay();
 }
 
 async function addBalance(payId,phone,name,amount,orderNum){
   if(!confirm(`${parseInt(amount).toLocaleString()} so'm balans sifatida qo'shilsinmi?`))return;
-  // Mavjud balansni tekshirish
   const balRes=await dbQ('customer_balance',`phone=eq.${encodeURIComponent(phone)}`);
   if(Array.isArray(balRes)&&balRes.length){
     await dbU('customer_balance',balRes[0].id,{balance:balRes[0].balance+amount,updated_at:new Date().toISOString()});
   }else{
-  document.getElementById('pSizes').value = pSizes.join(',');
-// colors va sizes product bilan birga variants table ga save qilinadi
     await dbI('customer_balance',{phone,customer_name:name,balance:amount});
   }
   await dbU('payments',payId,{status:'Balans qaytarildi',admin_note:'Balans sifatida qaytarildi'});
   await tg(`🎁 <b>BALANS QO'SHILDI</b>\n\n👤 ${name}\n📞 ${phone}\n💚 +${parseInt(amount).toLocaleString()} so'm\n\nKeyingi xaridingizda foydalanishingiz mumkin!`);
-  showToast('🎁 Balans qo\'shildi!');
-  await loadAPay();
+  showToast('🎁 Balans qo\'shildi!');await loadAPay();
 }
 
 function refundPrompt(phone,name,amount,orderNum){
   const card=prompt(`Mijozning karta raqamini kiriting:\n(${name} - ${parseInt(amount).toLocaleString()} so'm qaytariladi)`);
   if(card)processRefund(phone,name,amount,orderNum,card);
 }
-
 async function processRefund(phone,name,amount,orderNum,card){
   await tg(`💰 <b>REFUND SO'ROVI</b>\n\n👤 ${name}\n📞 ${phone}\n🔖 ${orderNum}\n💰 ${parseInt(amount).toLocaleString()} so'm\n💳 Karta: ${card}\n\n⚠️ Ushbu miqdorni mijoz kartasiga o'tkazing!`);
-  showToast('💰 Refund so\'rovi yuborildi!');
-  await loadAPay();
+  showToast('💰 Refund so\'rovi yuborildi!');await loadAPay();
 }
 
-// ADMIN STATS
 async function loadAS(){
   const el=document.getElementById('aS');
   el.innerHTML='<div class="empty-state">Yuklanmoqda...</div>';
-  const [orders,payments]=await Promise.all([dbQ('orders'),dbQ('payments')]);
+  const[orders,payments]=await Promise.all([dbQ('orders'),dbQ('payments')]);
   const today=new Date().toDateString();
   const todayOrders=Array.isArray(orders)?orders.filter(o=>new Date(o.created_at).toDateString()===today):[];
   const totalRevenue=Array.isArray(payments)?payments.filter(p=>p.status==='Tasdiqlandi').reduce((s,p)=>s+parseInt(p.amount),0):0;
   const todayRevenue=Array.isArray(payments)?payments.filter(p=>p.status==='Tasdiqlandi'&&new Date(p.created_at).toDateString()===today).reduce((s,p)=>s+parseInt(p.amount),0):0;
   const pending=Array.isArray(payments)?payments.filter(p=>p.status==='Kutilmoqda').length:0;
-
   el.innerHTML=`
     <div class="stats-grid">
       <div class="stat-card"><div class="stat-num">${todayOrders.length}</div><div class="stat-label">Bugungi buyurtma</div></div>
@@ -1183,7 +1185,6 @@ async function loadAS(){
       </div>`).join(''):'<div class="empty-state">Buyurtmalar yo\'q</div>'}`;
 }
 
-// VARIANT & MEDIA MANAGERS
 async function openVM(pid,pname){window._vPid=pid;window._vPname=pname;openPanel('variantPanel');await renderVM(pid,pname);}
 async function renderVM(pid,pname){
   const el=document.getElementById('variantPanelContent');
@@ -1240,7 +1241,6 @@ async function renderMM(pid,pname){
     <input type="file" id="mI" accept="image/*" multiple style="display:none" onchange="upMF(this,'image',${pid},'${pname.replace(/'/g,'')}')">
     <div class="upload-area" onclick="document.getElementById('mV').click()" style="margin-bottom:8px">🎥 Video yuklash</div>
     <input type="file" id="mV" accept="video/*" multiple style="display:none" onchange="upMF(this,'video',${pid},'${pname.replace(/'/g,'')}')">
-
     <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:var(--radius-sm);padding:10px;margin-bottom:12px;font-size:11px;color:var(--gray)">
       💡 Rang bo'yicha rasm bog'lash uchun variant turini kiriting
     </div>
@@ -1273,7 +1273,6 @@ async function upMF(input,type,pid,pname){
   }
   showToast('✅ Yuklandi!');await renderMM(pid,pname);await loadProducts(currentFilter);
 }
-
 async function addMU(pid,type,pname){
   const u=document.getElementById('mU').value.trim();if(!u){alert("URL kiriting!");return;}
   const vType=document.getElementById('mVType')?.value.trim()||null;
@@ -1285,6 +1284,7 @@ async function addMU(pid,type,pname){
 async function delM(mid,pid,pname){if(!confirm("O'chirishni tasdiqlaysizmi?"))return;await dbD('product_media',mid);showToast("O'chirildi");await renderMM(pid,pname);await loadProducts(currentFilter);}
 
 function openProductForm(p=null){
+  pColors=[];pSizes=[];
   document.getElementById('pEditId').value=p?p.id:'';
   document.getElementById('productFormTitle').textContent=p?'Tahrirlash':'Yangi mahsulot';
   document.getElementById('pName').value=p?p.name:'';
@@ -1300,7 +1300,10 @@ function openProductForm(p=null){
   const img=document.getElementById('imgPreview');
   if(p&&p.image_url){img.src=p.image_url;img.style.display='block';document.getElementById('imgUploadText').textContent='Mavjud rasm';}
   else{img.style.display='none';document.getElementById('imgUploadText').textContent='📷 Rasm tanlang';}
-  uploadedFile=null;openPanel('productFormPanel');
+  uploadedFile=null;
+  renderPColors();
+  renderPSizes();
+  openPanel('productFormPanel');
 }
 
 async function saveProduct(){
@@ -1312,93 +1315,50 @@ async function saveProduct(){
   const tagsVal=document.getElementById('pTags').value;
   const tags=tagsVal?tagsVal.split(',').filter(t=>t):[];
   const oldPrice=document.getElementById('pOldPrice').value;
-  const data={name,description:document.getElementById('pDesc').value.trim(),price:parseInt(price),old_price:oldPrice?parseInt(oldPrice):null,cat:document.getElementById('pCat').value,gender:document.getElementById('pGender').value,tags,emoji:document.getElementById('pEmoji').value||'🛍️',active:document.getElementById('pActive').value==='true',image_url:imgU||null};
+  const data={
+    name,
+    description:document.getElementById('pDesc').value.trim(),
+    price:parseInt(price),
+    old_price:oldPrice?parseInt(oldPrice):null,
+    cat:document.getElementById('pCat').value,
+    gender:document.getElementById('pGender').value,
+    tags,
+    emoji:document.getElementById('pEmoji').value||'🛍️',
+    active:document.getElementById('pActive').value==='true',
+    image_url:imgU||null
+  };
   const eid=document.getElementById('pEditId').value;
-  if(eid)await dbU('products',eid,data);else await dbI('products',data);
-  showToast(eid?'Yangilandi!':'Qo\'shildi!');uploadedFile=null;openPanel('adminPanel');await loadAdminPanel();await loadProducts(currentFilter);
+  let savedId=eid;
+  if(eid){
+    await dbU('products',eid,data);
+  }else{
+    const res=await dbI('products',data);
+    if(Array.isArray(res)&&res[0])savedId=res[0].id;
+  }
+
+  // Ranglarni product_variants ga saqlash
+  if(savedId&&pColors.length){
+    for(const c of pColors){
+      if(c.name||c.url){
+        await dbI('product_variants',{product_id:savedId,variant_type:'Rang',value:c.name||c.url,color_image:c.url||null,price_extra:0,in_stock:true});
+      }
+    }
+  }
+  // O'lchamlarni product_variants ga saqlash
+  if(savedId&&pSizes.length){
+    for(const s of pSizes){
+      await dbI('product_variants',{product_id:savedId,variant_type:"O'lcham",value:s,price_extra:0,in_stock:true});
+    }
+  }
+
+  showToast(eid?'Yangilandi!':'Qo\'shildi!');
+  uploadedFile=null;
+  pColors=[];pSizes=[];
+  openPanel('adminPanel');
+  await loadAdminPanel();
+  await loadProducts(currentFilter);
   btn.textContent='Saqlash →';btn.disabled=false;
-  // Mahsulot forma uchun rang/o'lcham state
-let pColors = [];
-let pSizes = [];
-
-function addPColor() {
-  const id = Date.now();
-  pColors.push({id, name:'', url:'', inStock:true});
-  renderPColors();
 }
-
-function removePColor(id) {
-  pColors = pColors.filter(c => c.id !== id);
-  renderPColors();
-}
-
-function upPColor(id, field, val) {
-  const c = pColors.find(x => x.id === id);
-  if (c) c[field] = val;
-}
-
-function updPDot(id) {
-  const c = pColors.find(x => x.id === id);
-  if (!c) return;
-  const dot = document.getElementById('pdot_' + id);
-  if (!dot) return;
-  if (c.url) {
-    dot.innerHTML = '<img src="' + c.url + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
-  } else {
-    dot.innerHTML = '<span style="color:var(--gray);font-size:10px">?</span>';
-  }
-}
-
-function renderPColors() {
-  const list = document.getElementById('pColorList');
-  if (!list) return;
-  if (!pColors.length) {
-    list.innerHTML = '<div style="font-size:11px;color:var(--gray);text-align:center;padding:10px;border:1px dashed var(--gray3);border-radius:var(--radius-sm);margin-bottom:8px">Rang qo\'shilmagan</div>';
-    return;
-  }
-  list.innerHTML = pColors.map(c => `
-    <div style="display:flex;gap:8px;align-items:center;padding:8px 10px;background:var(--bg3);border-radius:var(--radius-sm);border:1px solid var(--gray3);margin-bottom:6px">
-      <div id="pdot_${c.id}" style="width:28px;height:28px;border-radius:50%;flex-shrink:0;border:2px solid var(--gray3);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--gray)">
-        ${c.url ? '<img src="' + c.url + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">' : '?'}
-      </div>
-      <input type="text" placeholder="Rang nomi" value="${c.name}"
-        oninput="upPColor(${c.id},'name',this.value)"
-        style="width:90px;padding:7px 8px;background:var(--bg);border:1px solid var(--gray3);border-radius:4px;color:var(--white);font-size:12px;outline:none">
-      <input type="text" placeholder="Rasm URL"  value="${c.url}"
-        oninput="upPColor(${c.id},'url',this.value);updPDot(${c.id})"
-        style="flex:1;padding:7px 8px;background:var(--bg);border:1px solid var(--gray3);border-radius:4px;color:var(--white);font-size:12px;outline:none">
-      <button onclick="removePColor(${c.id})" style="background:none;border:none;color:var(--gray);font-size:18px;cursor:pointer;padding:0 4px;line-height:1">&times;</button>
-    </div>`).join('');
-}
-
-function addPSize() {
-  const inp = document.getElementById('pSizeInput');
-  const val = inp.value.trim();
-  if (!val) return;
-  val.split(',').map(s => s.trim()).filter(Boolean).forEach(s => {
-    if (!pSizes.includes(s)) pSizes.push(s);
-  });
-  inp.value = '';
-  renderPSizes();
-}
-
-function removePSize(s) {
-  pSizes = pSizes.filter(x => x !== s);
-  renderPSizes();
-}
-
-function renderPSizes() {
-  const el = document.getElementById('pSizeChips');
-  if (!el) return;
-  if (!pSizes.length) { el.innerHTML = ''; return; }
-  el.innerHTML = pSizes.map(s =>
-    `<div style="padding:6px 12px;border:1px solid var(--gold);border-radius:4px;font-size:12px;font-weight:600;color:var(--gold);display:flex;align-items:center;gap:6px">
-      ${s}
-      <span onclick="removePSize('${s}')" style="color:var(--danger);cursor:pointer;font-size:14px;line-height:1">&times;</span>
-    </div>`
-  ).join('');
-}
-async function delProd(id){if(!confirm("O'chirishni tasdiqlaysizmi?"))return;await dbD('products',id);showToast("O'chirildi");await loadAP();await loadProducts(currentFilter);}
 
 function openImportForm(){
   document.getElementById('adminContent').innerHTML=`
