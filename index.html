@@ -319,11 +319,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 
-<!-- PRODUCT FORM -->
+<!-- PRODUCT FORM PANEL -->
 <div class="panel" id="productFormPanel">
   <button class="close-btn" onclick="openPanel('adminPanel');loadAdminPanel()">✕</button>
   <div class="panel-title" id="productFormTitle">Yangi mahsulot</div>
   <input type="hidden" id="pEditId">
+
+  <!-- RASM -->
   <div class="form-group">
     <label>Asosiy rasm</label>
     <div class="img-upload-area" onclick="document.getElementById('imgInput').click()">
@@ -333,17 +335,41 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <input type="file" id="imgInput" accept="image/*" style="display:none" onchange="previewImage(this)">
     <input type="hidden" id="pImageUrl">
   </div>
-  <div class="form-group"><label>Emoji</label><input type="text" id="pEmoji" placeholder="👗" maxlength="2"></div>
+
+  <!-- ASOSIY MA'LUMOTLAR -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="form-group"><label>Emoji</label><input type="text" id="pEmoji" placeholder="👗" maxlength="2"></div>
+    <div class="form-group"><label>Holat</label>
+      <select id="pActive"><option value="true">✅ Faol</option><option value="false">❌ Nofaol</option></select>
+    </div>
+  </div>
+
   <div class="form-group"><label>Nom *</label><input type="text" id="pName" placeholder="Uniqlo AIRism Blouse"></div>
   <div class="form-group"><label>Tavsif</label><input type="text" id="pDesc" placeholder="Qisqacha tavsif"></div>
-  <div class="form-group"><label>Narx (so'm) *</label><input type="number" id="pPrice" placeholder="185000"></div>
-  <div class="form-group"><label>Eski narx (chegirma uchun)</label><input type="number" id="pOldPrice" placeholder="250000"></div>
-  <div class="form-group"><label>Kategoriya *</label>
-    <select id="pCat"><option value="kiyim">👗 Kiyim</option><option value="kosmetika">💄 Kosmetika</option><option value="oyoq_kiyim">👠 Oyoq kiyim</option></select>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="form-group"><label>Narx (so'm) *</label><input type="number" id="pPrice" placeholder="185000"></div>
+    <div class="form-group"><label>Eski narx</label><input type="number" id="pOldPrice" placeholder="250000"></div>
   </div>
-  <div class="form-group"><label>Gender *</label>
-    <select id="pGender"><option value="ayol">👩 Ayollar</option><option value="erkak">👨 Erkaklar</option><option value="unisex">🤝 Unisex</option></select>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="form-group"><label>Kategoriya *</label>
+      <select id="pCat">
+        <option value="kiyim">👗 Kiyim</option>
+        <option value="kosmetika">💄 Kosmetika</option>
+        <option value="oyoq_kiyim">👠 Oyoq kiyim</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Gender *</label>
+      <select id="pGender">
+        <option value="ayol">👩 Ayollar</option>
+        <option value="erkak">👨 Erkaklar</option>
+        <option value="unisex">🤝 Unisex</option>
+      </select>
+    </div>
   </div>
+
+  <!-- TEGLAR -->
   <div class="form-group">
     <label>Qo'shimcha teglar</label>
     <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px" id="tagSelector">
@@ -356,12 +382,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
     <input type="hidden" id="pTags">
   </div>
-  <div class="form-group"><label>Holat</label>
-    <select id="pActive"><option value="true">✅ Faol</option><option value="false">❌ Nofaol</option></select>
-  </div>
-  <button class="btn-primary" id="pSubmitBtn" onclick="saveProduct()">Saqlash →</button>
-</div>
 
+  <!-- RANGLAR -->
+  <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);padding:10px 0 8px;border-top:1px solid var(--gray3);margin-top:4px">Ranglar</div>
+  <div id="pColorList"></div>
+  <button class="btn-secondary" onclick="addPColor()" style="margin-top:0;padding:10px;font-size:11px">+ Rang qo'shish</button>
+
+  <!-- O'LCHAMLAR -->
+  <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);padding:10px 0 8px;border-top:1px solid var(--gray3);margin-top:8px">O'lchamlar</div>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px" id="pSizeChips"></div>
+  <div style="display:flex;gap:8px">
+    <input type="text" id="pSizeInput" placeholder="S, M, L, XL yoki 36..."
+      style="flex:1;padding:10px 12px;background:var(--bg3);border:1px solid var(--gray3);border-radius:var(--radius-sm);color:var(--white);font-size:13px;outline:none"
+      onkeydown="if(event.key==='Enter')addPSize()"
+      onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--gray3)'">
+    <button onclick="addPSize()" style="padding:10px 16px;background:var(--gold);color:#000;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:700;cursor:pointer">+</button>
+  </div>
+  <input type="hidden" id="pSizes">
+
+  <button class="btn-primary" id="pSubmitBtn" onclick="saveProduct()" style="margin-top:16px">Saqlash →</button>
+</div>
 <!-- MEDIA PANEL -->
 <div class="panel" id="mediaPanel">
   <button class="close-btn" onclick="openPanel('adminPanel');loadAdminPanel()">✕</button>
@@ -1095,6 +1135,8 @@ async function addBalance(payId,phone,name,amount,orderNum){
   if(Array.isArray(balRes)&&balRes.length){
     await dbU('customer_balance',balRes[0].id,{balance:balRes[0].balance+amount,updated_at:new Date().toISOString()});
   }else{
+  document.getElementById('pSizes').value = pSizes.join(',');
+// colors va sizes product bilan birga variants table ga save qilinadi
     await dbI('customer_balance',{phone,customer_name:name,balance:amount});
   }
   await dbU('payments',payId,{status:'Balans qaytarildi',admin_note:'Balans sifatida qaytarildi'});
@@ -1275,6 +1317,86 @@ async function saveProduct(){
   if(eid)await dbU('products',eid,data);else await dbI('products',data);
   showToast(eid?'Yangilandi!':'Qo\'shildi!');uploadedFile=null;openPanel('adminPanel');await loadAdminPanel();await loadProducts(currentFilter);
   btn.textContent='Saqlash →';btn.disabled=false;
+  // Mahsulot forma uchun rang/o'lcham state
+let pColors = [];
+let pSizes = [];
+
+function addPColor() {
+  const id = Date.now();
+  pColors.push({id, name:'', url:'', inStock:true});
+  renderPColors();
+}
+
+function removePColor(id) {
+  pColors = pColors.filter(c => c.id !== id);
+  renderPColors();
+}
+
+function upPColor(id, field, val) {
+  const c = pColors.find(x => x.id === id);
+  if (c) c[field] = val;
+}
+
+function updPDot(id) {
+  const c = pColors.find(x => x.id === id);
+  if (!c) return;
+  const dot = document.getElementById('pdot_' + id);
+  if (!dot) return;
+  if (c.url) {
+    dot.innerHTML = '<img src="' + c.url + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+  } else {
+    dot.innerHTML = '<span style="color:var(--gray);font-size:10px">?</span>';
+  }
+}
+
+function renderPColors() {
+  const list = document.getElementById('pColorList');
+  if (!list) return;
+  if (!pColors.length) {
+    list.innerHTML = '<div style="font-size:11px;color:var(--gray);text-align:center;padding:10px;border:1px dashed var(--gray3);border-radius:var(--radius-sm);margin-bottom:8px">Rang qo\'shilmagan</div>';
+    return;
+  }
+  list.innerHTML = pColors.map(c => `
+    <div style="display:flex;gap:8px;align-items:center;padding:8px 10px;background:var(--bg3);border-radius:var(--radius-sm);border:1px solid var(--gray3);margin-bottom:6px">
+      <div id="pdot_${c.id}" style="width:28px;height:28px;border-radius:50%;flex-shrink:0;border:2px solid var(--gray3);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--gray)">
+        ${c.url ? '<img src="' + c.url + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">' : '?'}
+      </div>
+      <input type="text" placeholder="Rang nomi" value="${c.name}"
+        oninput="upPColor(${c.id},'name',this.value)"
+        style="width:90px;padding:7px 8px;background:var(--bg);border:1px solid var(--gray3);border-radius:4px;color:var(--white);font-size:12px;outline:none">
+      <input type="text" placeholder="Rasm URL"  value="${c.url}"
+        oninput="upPColor(${c.id},'url',this.value);updPDot(${c.id})"
+        style="flex:1;padding:7px 8px;background:var(--bg);border:1px solid var(--gray3);border-radius:4px;color:var(--white);font-size:12px;outline:none">
+      <button onclick="removePColor(${c.id})" style="background:none;border:none;color:var(--gray);font-size:18px;cursor:pointer;padding:0 4px;line-height:1">&times;</button>
+    </div>`).join('');
+}
+
+function addPSize() {
+  const inp = document.getElementById('pSizeInput');
+  const val = inp.value.trim();
+  if (!val) return;
+  val.split(',').map(s => s.trim()).filter(Boolean).forEach(s => {
+    if (!pSizes.includes(s)) pSizes.push(s);
+  });
+  inp.value = '';
+  renderPSizes();
+}
+
+function removePSize(s) {
+  pSizes = pSizes.filter(x => x !== s);
+  renderPSizes();
+}
+
+function renderPSizes() {
+  const el = document.getElementById('pSizeChips');
+  if (!el) return;
+  if (!pSizes.length) { el.innerHTML = ''; return; }
+  el.innerHTML = pSizes.map(s =>
+    `<div style="padding:6px 12px;border:1px solid var(--gold);border-radius:4px;font-size:12px;font-weight:600;color:var(--gold);display:flex;align-items:center;gap:6px">
+      ${s}
+      <span onclick="removePSize('${s}')" style="color:var(--danger);cursor:pointer;font-size:14px;line-height:1">&times;</span>
+    </div>`
+  ).join('');
 }
 async function delProd(id){if(!confirm("O'chirishni tasdiqlaysizmi?"))return;await dbD('products',id);showToast("O'chirildi");await loadAP();await loadProducts(currentFilter);}
 
