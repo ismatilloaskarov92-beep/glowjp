@@ -1230,56 +1230,145 @@ async function togStock(id,cur,pid,pname,btn){
 }
 
 async function openMM(pid,pname){window._mPid=pid;window._mPname=pname;openPanel('mediaPanel');await renderMM(pid,pname);}
+
 async function renderMM(pid,pname){
   const el=document.getElementById('mediaPanelContent');
   el.innerHTML='<div class="empty-state">Yuklanmoqda...</div>';
   const media=await dbQ('product_media',`product_id=eq.${pid}&order=sort_order.asc,created_at.asc`);
   const list=Array.isArray(media)?media:[];
+  const mainList=list.filter(m=>!m.variant_value);
+  const colorList=list.filter(m=>m.variant_value);
+  const pn=pname.replace(/'/g,'');
+
   el.innerHTML=`
     <div style="font-size:11px;letter-spacing:2px;color:var(--gold);margin-bottom:16px">${pname}</div>
-    <div class="upload-area" onclick="document.getElementById('mI').click()">📷 Rasm yuklash</div>
-    <input type="file" id="mI" accept="image/*" multiple style="display:none" onchange="upMF(this,'image',${pid},'${pname.replace(/'/g,'')}')">
-    <div class="upload-area" onclick="document.getElementById('mV').click()" style="margin-bottom:8px">🎥 Video yuklash</div>
-    <input type="file" id="mV" accept="video/*" multiple style="display:none" onchange="upMF(this,'video',${pid},'${pname.replace(/'/g,'')}')">
-    <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:var(--radius-sm);padding:10px;margin-bottom:12px;font-size:11px;color:var(--gray)">
-      💡 Rang bo'yicha rasm bog'lash uchun variant turini kiriting
+
+    <!-- ===== ASOSIY RASMLAR ===== -->
+    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);padding:8px 0 10px;border-bottom:1px solid var(--gray3);margin-bottom:12px">
+      🖼️ Asosiy rasmlar
     </div>
-    <div style="display:flex;gap:8px;margin-bottom:8px">
-      <div class="form-group" style="flex:1;margin:0"><input type="text" id="mVType" placeholder="Variant turi (masalan: Rang)" style="font-size:12px;padding:8px"></div>
-      <div class="form-group" style="flex:1;margin:0"><input type="text" id="mVVal" placeholder="Qiymat (masalan: Qizil)" style="font-size:12px;padding:8px"></div>
-    </div>
-    <div class="form-group"><input type="text" id="mU" placeholder="🔗 URL orqali qo'shish"></div>
-    <div style="display:flex;gap:8px;margin-bottom:16px">
-      <button class="btn-secondary" style="margin-top:0" onclick="addMU(${pid},'image','${pname.replace(/'/g,'')}')">🖼️ Rasm URL</button>
-      <button class="btn-secondary" style="margin-top:0" onclick="addMU(${pid},'video','${pname.replace(/'/g,'')}')">🎥 Video URL</button>
-    </div>
-    <div class="section-title">Mavjud (${list.length})</div>
-    ${!list.length?'<div class="empty-state" style="padding:16px">Media yo\'q</div>':
-    `<div class="media-grid">${list.map(m=>`
+
+    <!-- Fayl yuklash -->
+    <div class="upload-area" onclick="document.getElementById('mI').click()">📷 Rasm yuklash (bir nechta)</div>
+    <input type="file" id="mI" accept="image/*" multiple style="display:none" onchange="upMF(this,'image',${pid},'${pn}',null,null)">
+    <div class="upload-area" onclick="document.getElementById('mV').click()" style="margin-bottom:12px">🎥 Video yuklash</div>
+    <input type="file" id="mV" accept="video/*" multiple style="display:none" onchange="upMF(this,'video',${pid},'${pn}',null,null)">
+
+    <!-- URL qo'shish (bir nechta qator) -->
+    <div style="font-size:10px;color:var(--gray);letter-spacing:1px;margin-bottom:6px">URL orqali qo'shish — har qatorga bitta URL:</div>
+    <textarea id="mMainUrls" rows="3" placeholder="https://example.com/img1.jpg&#10;https://example.com/img2.jpg&#10;https://example.com/img3.jpg"
+      style="width:100%;padding:10px 12px;background:var(--bg3);border:1px solid var(--gray3);border-radius:var(--radius-sm);color:var(--white);font-size:12px;outline:none;resize:vertical;margin-bottom:6px;line-height:1.6"
+      onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--gray3)'"></textarea>
+    <button onclick="addMainUrls(${pid},'${pn}')" style="width:100%;padding:10px;background:var(--gold);color:#000;border:none;border-radius:var(--radius-sm);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;margin-bottom:16px">
+      + Rasmlarni qo'shish
+    </button>
+
+    <!-- Mavjud asosiy rasmlar -->
+    <div style="font-size:10px;letter-spacing:1px;color:var(--gray);margin-bottom:8px">MAVJUD ASOSIY (${mainList.length})</div>
+    ${!mainList.length?'<div style="font-size:12px;color:var(--gray);text-align:center;padding:12px;border:1px dashed var(--gray3);border-radius:var(--radius-sm);margin-bottom:16px">Asosiy rasm yo\'q</div>':
+    `<div class="media-grid" style="margin-bottom:16px">${mainList.map(m=>`
       <div class="media-item">
         ${m.media_type==='video'?`<video src="${m.url}" style="width:100%;height:100%;object-fit:cover"></video>`:`<img src="${m.url}">`}
-        <span class="media-type">${m.variant_value?m.variant_value:m.media_type==='video'?'VID':'IMG'}</span>
-        <button class="media-del" onclick="delM(${m.id},${pid},'${pname.replace(/'/g,'')}')">✕</button>
-      </div>`).join('')}</div>`}`;
+        <span class="media-type">${m.media_type==='video'?'VID':'IMG'}</span>
+        <button class="media-del" onclick="delM(${m.id},${pid},'${pn}')">✕</button>
+      </div>`).join('')}</div>`}
+
+    <!-- ===== RANG BO'YICHA RASMLAR ===== -->
+    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);padding:8px 0 10px;border-top:1px solid var(--gray3);border-bottom:1px solid var(--gray3);margin-bottom:12px">
+      🎨 Rang bo'yicha rasmlar
+    </div>
+    <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:var(--radius-sm);padding:10px;margin-bottom:12px;font-size:11px;color:var(--gray);line-height:1.6">
+      💡 Rang nomi kiriting → URL'larni qo'shing → mahsulot sahifasida rang bosilganda shu rasm ko'rinadi
+    </div>
+
+    <!-- Rang nomi -->
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+      <input type="text" id="mColorName" placeholder="Rang nomi (masalan: Qizil, Ko'k, Yashil...)"
+        style="flex:1;padding:10px 12px;background:var(--bg3);border:1px solid var(--gray3);border-radius:var(--radius-sm);color:var(--white);font-size:13px;outline:none"
+        onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--gray3)'">
+    </div>
+
+    <!-- Rang URL'lari (bir nechta) -->
+    <div style="font-size:10px;color:var(--gray);letter-spacing:1px;margin-bottom:6px">Shu rangga tegishli rasmlar (har qatorga bitta URL):</div>
+    <textarea id="mColorUrls" rows="4" placeholder="https://example.com/qizil-old.jpg&#10;https://example.com/qizil-yon.jpg&#10;https://example.com/qizil-orqa.jpg"
+      style="width:100%;padding:10px 12px;background:var(--bg3);border:1px solid var(--gray3);border-radius:var(--radius-sm);color:var(--white);font-size:12px;outline:none;resize:vertical;margin-bottom:6px;line-height:1.6"
+      onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--gray3)'"></textarea>
+    <button onclick="addColorUrls(${pid},'${pn}')" style="width:100%;padding:10px;background:rgba(201,168,76,0.2);color:var(--gold);border:1px solid var(--gold);border-radius:var(--radius-sm);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;margin-bottom:16px">
+      🎨 Rang rasmlarini qo'shish
+    </button>
+
+    <!-- Mavjud rang rasmlari (ranglar bo'yicha guruhlangan) -->
+    <div style="font-size:10px;letter-spacing:1px;color:var(--gray);margin-bottom:8px">MAVJUD RANGLAR (${colorList.length} ta rasm)</div>
+    ${renderColorGroups(colorList,pid,pn)}
+  `;
 }
 
-async function upMF(input,type,pid,pname){
+function renderColorGroups(colorList,pid,pn){
+  if(!colorList.length)return'<div style="font-size:12px;color:var(--gray);text-align:center;padding:12px;border:1px dashed var(--gray3);border-radius:var(--radius-sm)">Rang bo\'yicha rasm yo\'q</div>';
+  // Ranglar bo'yicha guruhlash
+  const groups={};
+  colorList.forEach(m=>{
+    const k=m.variant_value||'Noma\'lum';
+    if(!groups[k])groups[k]=[];
+    groups[k].push(m);
+  });
+  return Object.entries(groups).map(([color,imgs])=>`
+    <div style="background:var(--bg3);border-radius:var(--radius-sm);border:1px solid var(--gray3);padding:12px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-size:12px;font-weight:700;color:var(--gold);letter-spacing:1px">${color}</div>
+        <div style="font-size:10px;color:var(--gray)">${imgs.length} ta rasm</div>
+      </div>
+      <div class="media-grid">${imgs.map(m=>`
+        <div class="media-item">
+          <img src="${m.url}">
+          <span class="media-type" style="font-size:8px">${color}</span>
+          <button class="media-del" onclick="delM(${m.id},${pid},'${pn}')">✕</button>
+        </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// Asosiy rasmlarni batch qo'shish (textarea — har qator bir URL)
+async function addMainUrls(pid,pname){
+  const ta=document.getElementById('mMainUrls');
+  const urls=ta.value.split('\n').map(u=>u.trim()).filter(u=>u.startsWith('http'));
+  if(!urls.length){alert("Kamida bitta URL kiriting!");return;}
+  showToast('Qo\'shilmoqda...');
+  const c=await dbQ('product_media',`product_id=eq.${pid}`);
+  let sortOrder=Array.isArray(c)?c.length:0;
+  for(const u of urls){
+    await dbI('product_media',{product_id:pid,media_type:'image',url:u,sort_order:sortOrder++,variant_type:null,variant_value:null});
+  }
+  ta.value='';
+  showToast(`✅ ${urls.length} ta rasm qo'shildi!`);
+  await renderMM(pid,pname);await loadProducts(currentFilter);
+}
+
+// Rang bo'yicha rasmlarni batch qo'shish
+async function addColorUrls(pid,pname){
+  const colorName=document.getElementById('mColorName').value.trim();
+  const ta=document.getElementById('mColorUrls');
+  const urls=ta.value.split('\n').map(u=>u.trim()).filter(u=>u.startsWith('http'));
+  if(!colorName){alert("Rang nomini kiriting! (masalan: Qizil)");return;}
+  if(!urls.length){alert("Kamida bitta URL kiriting!");return;}
+  showToast('Qo\'shilmoqda...');
+  const c=await dbQ('product_media',`product_id=eq.${pid}`);
+  let sortOrder=Array.isArray(c)?c.length:0;
+  for(const u of urls){
+    await dbI('product_media',{product_id:pid,media_type:'image',url:u,sort_order:sortOrder++,variant_type:'Rang',variant_value:colorName});
+  }
+  ta.value='';
+  showToast(`✅ ${urls.length} ta rasm "${colorName}" rangiga qo'shildi!`);
+  await renderMM(pid,pname);await loadProducts(currentFilter);
+}
+
+async function upMF(input,type,pid,pname,vType,vVal){
   if(!input.files.length)return;showToast('Yuklanmoqda...');
-  const vType=document.getElementById('mVType')?.value.trim()||null;
-  const vVal=document.getElementById('mVVal')?.value.trim()||null;
   for(const f of input.files){
     const u=await up(f,'products');
-    if(u){const c=await dbQ('product_media',`product_id=eq.${pid}`);await dbI('product_media',{product_id:pid,media_type:type,url:u,sort_order:Array.isArray(c)?c.length:0,variant_type:vType,variant_value:vVal});}
+    if(u){const c=await dbQ('product_media',`product_id=eq.${pid}`);await dbI('product_media',{product_id:pid,media_type:type,url:u,sort_order:Array.isArray(c)?c.length:0,variant_type:vType||null,variant_value:vVal||null});}
   }
   showToast('✅ Yuklandi!');await renderMM(pid,pname);await loadProducts(currentFilter);
-}
-async function addMU(pid,type,pname){
-  const u=document.getElementById('mU').value.trim();if(!u){alert("URL kiriting!");return;}
-  const vType=document.getElementById('mVType')?.value.trim()||null;
-  const vVal=document.getElementById('mVVal')?.value.trim()||null;
-  const c=await dbQ('product_media',`product_id=eq.${pid}`);
-  await dbI('product_media',{product_id:pid,media_type:type,url:u,sort_order:Array.isArray(c)?c.length:0,variant_type:vType,variant_value:vVal});
-  document.getElementById('mU').value='';showToast('Qo\'shildi!');await renderMM(pid,pname);await loadProducts(currentFilter);
 }
 async function delM(mid,pid,pname){if(!confirm("O'chirishni tasdiqlaysizmi?"))return;await dbD('product_media',mid);showToast("O'chirildi");await renderMM(pid,pname);await loadProducts(currentFilter);}
 
