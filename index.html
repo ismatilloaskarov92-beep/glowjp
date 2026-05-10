@@ -965,15 +965,22 @@ function openEditOrder(o){
 }
 function rEI(){
   document.getElementById('editItemsList').innerHTML=editItems.map((i,idx)=>`
-    <div class="cart-item">
+    <div class="cart-item" style="flex-wrap:wrap;padding-bottom:12px">
       <div class="cart-item-img">${i.image_url?`<img src="${i.image_url}">`:(i.emoji||'🛍️')}</div>
-      <div class="cart-item-info">
+      <div class="cart-item-info" style="flex:1">
         <div class="cart-item-name">${i.name}</div>
-        ${i.vs?`<div class="cart-item-variant">${i.vs}</div>`:''}
+        <div style="margin:6px 0">
+          <input type="text" value="${i.vs||''}"
+            placeholder="Rang, o'lcham, izoh..."
+            oninput="editItems[${idx}].vs=this.value"
+            style="width:100%;padding:6px 10px;background:var(--bg3);border:1px solid var(--gray3);border-radius:var(--radius-sm);color:var(--white);font-size:12px;outline:none"
+            onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--gray3)'">
+        </div>
         <div class="qty-control">
           <button class="qty-btn" onclick="ceq(${idx},-1)">−</button>
           <span style="font-size:14px;font-weight:600;color:var(--white)">${i.qty}</span>
           <button class="qty-btn" onclick="ceq(${idx},1)">+</button>
+          <span style="font-size:11px;color:var(--gray);margin-left:4px">${parseInt(i.price).toLocaleString()} so'm/dona</span>
         </div>
       </div>
       <button class="remove-btn" onclick="rei(${idx})">✕</button>
@@ -1173,8 +1180,8 @@ async function loadAPay(){
 
 async function confirmPay(id,orderNum,phone,amount){
   await dbU('payments',id,{status:'Tasdiqlandi'});
-  const orders=await dbQ('orders',`order_number=eq.${orderNum}`);
-  if(Array.isArray(orders)&&orders[0])await dbU('orders',orders[0].id,{status:'Qabul qilindi'});
+  // order_number bo'yicha topib statusni yangilaymiz
+  const res=await fetch(SB+'/rest/v1/orders?order_number=eq.'+orderNum,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({status:'Qabul qilindi'})});
   await tg(`✅ <b>TO'LOV TASDIQLANDI!</b>\n\n🔖 ${orderNum}\n💰 ${parseInt(amount).toLocaleString()} so'm\n\nBuyurtmangiz tez orada jo'natiladi 🌸`);
   showToast('✅ To\'lov tasdiqlandi!');await loadAPay();
 }
