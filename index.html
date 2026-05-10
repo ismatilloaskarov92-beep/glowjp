@@ -253,6 +253,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(0);background:var(--bg3);color:var(--white);padding:12px 22px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;z-index:999;border:1px solid var(--gray3);white-space:nowrap;max-width:90vw;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.4);opacity:0;transition:opacity 0.25s,transform 0.25s;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(-8px);}
 
+/* ── PRODUCT VARIANTS (Uzum/Uniqlo style) ── */
+.vr-section{margin-bottom:20px;}
+.vr-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.vr-label{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray);font-weight:700;}
+.vr-selected{font-size:14px;font-weight:600;color:var(--white);}
+.vr-colors{display:flex;flex-wrap:wrap;gap:10px;}
+.vr-color-dot{width:40px;height:40px;border-radius:50%;cursor:pointer;transition:var(--transition);overflow:hidden;position:relative;box-shadow:0 0 0 1.5px rgba(255,255,255,0.15);flex-shrink:0;}
+.vr-color-dot img{width:100%;height:100%;object-fit:cover;}
+.vr-color-dot.active{box-shadow:0 0 0 2.5px var(--white),0 0 0 5px rgba(255,255,255,0.3);}
+.vr-color-dot.out{opacity:0.3;cursor:not-allowed;}
+.vr-out-line{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.vr-out-line::after{content:'';width:130%;height:1.5px;background:rgba(255,255,255,0.6);transform:rotate(-45deg);}
+.vr-sizes{display:flex;flex-wrap:wrap;gap:8px;}
+.vr-size-btn{min-width:50px;padding:10px 14px;border:1.5px solid var(--gray3);background:transparent;color:var(--white);font-size:14px;font-weight:600;cursor:pointer;transition:var(--transition);border-radius:var(--radius-xs);text-align:center;position:relative;font-family:inherit;}
+.vr-size-btn:hover:not(.out){border-color:var(--gray);}
+.vr-size-btn.active{border-color:var(--white);border-width:2px;background:transparent;}
+.vr-size-btn.out{opacity:0.35;cursor:not-allowed;color:var(--gray);}
+.vr-size-btn.out::after{content:'';position:absolute;top:50%;left:10%;width:80%;height:1px;background:var(--gray2);transform:rotate(0deg);}
 /* ── MISC ── */
 .divider{height:1px;background:var(--gray3);margin:16px 0;}
 .section-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;font-weight:700;}
@@ -552,7 +570,9 @@ const CID='867409233';
 const APASS='glowjp2024';
 const CARD='5614 6822 1574 7868';
 const CARD_NAME='XOLIDAXON ASKAROVA';
+const SK_ROLE='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpidnBxYnlwcGJvbmp5ZWdpdWtlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODI1MzE5NywiZXhwIjoyMDkzODI5MTk3fQ.placeholder';
 const H={apikey:SK,Authorization:'Bearer '+SK};
+const H_ADMIN={apikey:SK_ROLE,Authorization:'Bearer '+SK_ROLE};
 const SITE='https://glowjp.vercel.app';
 
 // ── STATE ───────────────────────────────────────────────────────────────────
@@ -578,7 +598,16 @@ async function dbUQ(t,q,d){
   await fetch(SB+'/rest/v1/'+t+'?'+q,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify(d)});
 }
 async function dbD(t,id){
-  await fetch(SB+'/rest/v1/'+t+'?id=eq.'+id,{method:'DELETE',headers:H});
+  await fetch(SB+'/rest/v1/'+t+'?id=eq.'+id,{
+    method:'DELETE',
+    headers:{...H,'Content-Type':'application/json','Prefer':'return=representation'}
+  });
+}
+async function dbDQ(t,q){
+  await fetch(SB+'/rest/v1/'+t+'?'+q,{
+    method:'DELETE',
+    headers:{...H,'Content-Type':'application/json','Prefer':'return=representation'}
+  });
 }
 async function up(file,b='products'){
   const fn=b+'_'+Date.now()+'.'+file.name.split('.').pop();
@@ -833,107 +862,100 @@ async function openDetail(id){
   if(!p)return;
   openPanel('detailPanel');
   document.getElementById('detailContent').innerHTML='<div class="empty-state"><div class="empty-icon">⏳</div></div>';
-
-  const results=await Promise.all([
+  const[mediaRes,varRes]=await Promise.all([
     dbQ('product_media','product_id=eq.'+id+'&order=sort_order.asc,created_at.asc'),
     dbQ('product_variants','product_id=eq.'+id+'&order=variant_type.asc,created_at.asc')
   ]);
-  const mList=Array.isArray(results[0])?results[0]:[];
-  const vList=Array.isArray(results[1])?results[1]:[];
-
+  const mList=Array.isArray(mediaRes)?mediaRes:[];
+  const vList=Array.isArray(varRes)?varRes:[];
   const mainMedia=mList.filter(function(m){return!m.variant_value;});
-  const varMedia=mList.filter(function(m){return m.variant_value;});
-
+  const varMedia=mList.filter(function(m){return!!m.variant_value;});
   const allMedia=[];
   if(p.image_url)allMedia.push({url:p.image_url,type:'image'});
   mainMedia.forEach(function(m){allMedia.push({url:m.url,type:m.media_type});});
-
   const vtypes={};
   vList.forEach(function(v){if(!vtypes[v.variant_type])vtypes[v.variant_type]=[];vtypes[v.variant_type].push(v);});
-
-  window._detP=p;window._detVT=Object.keys(vtypes);window._varMedia=varMedia;window._detAllMedia=allMedia;
-  window._selV={};
-
+  window._detP=p;window._detVT=Object.keys(vtypes);
+  window._varMedia=varMedia;window._detAllMedia=allMedia;window._selV={};
+  Object.entries(vtypes).forEach(function(e){
+    const first=e[1].find(function(o){return o.in_stock;})||e[1][0];
+    if(first)window._selV[e[0]]=first.value;
+  });
   const isSale=p.old_price&&p.old_price>p.price;
   const pct=isSale?Math.round((1-p.price/p.old_price)*100):0;
   const isWished=wishlist.includes(p.id);
-
-  // Gallery
   const mainHtml=allMedia.length?mEl(allMedia[0]):'<div style="font-size:80px;display:flex;align-items:center;justify-content:center;height:100%">'+(p.emoji||'🛍️')+'</div>';
-  const thumbsHtml=allMedia.length>1?allMedia.map(function(m,i){
-    return '<div class="gallery-thumb'+(i===0?' active':'')+'" onclick="swM('+i+')" id="gth_'+i+'">'+
-      (m.type==='video'?'<video src="'+m.url+'" style="width:100%;height:100%;object-fit:cover" muted></video>':'<img src="'+m.url+'" alt="'+(i+1)+'.">')+
+  const thumbsHtml=allMedia.length>1?buildThumbs(allMedia):'';
+  const varHtml=buildVarHtml(vtypes);
+  document.getElementById('detailContent').innerHTML=buildDetailHtml(p,mainHtml,thumbsHtml,varHtml,isSale,pct,isWished);
+}
+function buildThumbs(allMedia){
+  return '<div class="gallery-thumbs">'+allMedia.map(function(m,i){
+    return '<div class="gallery-thumb'+(i===0?' active':'')+'" id="gth_'+i+'" onclick="swM('+i+')">'+
+      (m.type==='video'?'<video src="'+m.url+'" muted style="width:100%;height:100%;object-fit:cover"></video>':'<img src="'+m.url+'" alt="'+(i+1)+'">')+
     '</div>';
-  }).join(''):'';
-
-  // Variants
-  let varHtml='';
+  }).join('')+'</div>';
+}
+function buildVarHtml(vtypes){
+  let h='';
   Object.entries(vtypes).forEach(function(entry){
-    const type=entry[0], opts=entry[1];
+    const type=entry[0],opts=entry[1];
     const isCol=type.toLowerCase().includes('rang');
-    const isSize=!isCol;
-    const firstOpt=opts.find(function(o){return o.in_stock;})||opts[0];
-    if(firstOpt&&!window._selV[type])window._selV[type]=firstOpt.value;
-
+    const selVal=window._selV[type]||'';
     if(isCol){
-      varHtml+='<div class="variant-section">'+
-        '<div class="variant-header">'+
-          '<div class="variant-label">'+type+':</div>'+
-          '<div class="variant-selected" id="clabel_'+type+'">'+( firstOpt?firstOpt.value:'')+'</div>'+
-        '</div>'+
-        '<div class="variant-options" style="gap:10px">'+
-        opts.map(function(o){
-          const bg=o.color_image?'':'background:'+o.value+';';
-          const isFirst=o===firstOpt;
-          const imgHtml=o.color_image?'<img src="'+o.color_image+'" alt="'+o.value+'">':'';
-          const outLine=!o.in_stock?'<div class="color-out-line"></div>':'';
-          return '<div class="color-opt'+(isFirst?' active':'')+(!o.in_stock?' out':'')+'\"'+
-            ' style="'+bg+'"'+
-            ' title="'+o.value+(o.in_stock?'':' (tugagan)')+'"'+
-            (o.in_stock?' onclick="svM(\''+type+'\',\''+o.value+'\',this,\'c\',\''+(o.color_image||'')+'\')"':'')+
-            '>'+imgHtml+outLine+'</div>';
-        }).join('')+
-        '</div>'+
-      '</div>';
+      h+='<div class="vr-section">';
+      h+='<div class="vr-header"><span class="vr-label">Rang:</span><span class="vr-selected" id="cl_'+type+'">'+selVal+'</span></div>';
+      h+='<div class="vr-colors">';
+      opts.forEach(function(o){
+        const isActive=o.value===selVal;
+        const bg=o.color_image?'':'background:'+o.value+';';
+        const enc=encodeURIComponent(o.value);
+        const ci=o.color_image||'';
+        h+='<div class="vr-color-dot'+(isActive?' active':'')+(!o.in_stock?' out':'')+'" style="'+bg+'" title="'+o.value+'"';
+        if(o.in_stock){const oc='svM(\''+type+'\',\''+enc+'\',this,\'c\',\''+ci+'\')';h+=' onclick="'+oc+'"';}
+        h+='>';
+        if(o.color_image)h+='<img src="'+o.color_image+'" alt="'+o.value+'">';
+        if(!o.in_stock)h+='<div class="vr-out-line"></div>';
+        h+='</div>';
+      });
+      h+='</div></div>';
     } else {
-      varHtml+='<div class="variant-section">'+
-        '<div class="variant-header">'+
-          '<div class="variant-label">O\'lcham:</div>'+
-          '<div class="variant-selected" id="slabel_'+type+'">'+( firstOpt?firstOpt.value:'')+'</div>'+
-        '</div>'+
-        '<div class="variant-options" style="gap:6px">'+
-        opts.map(function(o){
-          const isFirst=o===firstOpt;
-          return '<div class="size-opt'+(isFirst?' active':'')+(!o.in_stock?' out':'')+'\"'+
-            (o.in_stock?' onclick="svM(\''+type+'\',\''+o.value+'\',this,\'t\',\'\')"':'')+
-            ' title="'+o.value+(o.in_stock?'':' - tugagan')+'">'+
-            o.value+'</div>';
-        }).join('')+
-        '</div>'+
-        '<div style="font-size:11px;color:var(--gray);margin-top:6px">Chizilgan = tugagan, tanlash mumkin emas</div>'+
-      '</div>';
+      h+='<div class="vr-section">';
+      h+='<div class="vr-header"><span class="vr-label">Oʿlcham:</span><span class="vr-selected" id="sl_'+type+'">'+selVal+'</span></div>';
+      h+='<div class="vr-sizes">';
+      opts.forEach(function(o){
+        const isActive=o.value===selVal;
+        h+='<button class="vr-size-btn'+(isActive?' active':'')+(!o.in_stock?' out':'')+'" title="'+o.value+'"';
+        if(o.in_stock){const oc2='svM(\''+type+'\',\''+o.value+'\',this,\'t\',\'\')';h+=' onclick="'+oc2+'"';}
+        else h+=' disabled';
+        h+='>'+o.value+'</button>';
+      });
+      h+='</div><div style="font-size:11px;color:var(--gray);margin-top:8px">Kulrang = tugagan</div>';
+      h+='</div>';
     }
   });
-
-  document.getElementById('detailContent').innerHTML=
-    '<div style="padding-bottom:28px">'+
-      '<div class="gallery-main" id="gMain">'+mainHtml+'</div>'+
-      (thumbsHtml?'<div class="gallery-thumbs">'+thumbsHtml+'</div>':'')+
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'+
-        '<div class="detail-brand">'+p.cat+' · '+p.gender+'</div>'+
-        '<button onclick="toggleWish('+p.id+',this)" style="background:none;border:none;font-size:24px;cursor:pointer" class="'+(isWished?'active':'')+'">'+(isWished?'❤️':'🤍')+'</button>'+
-      '</div>'+
-      '<div class="detail-name">'+p.name+'</div>'+
-      '<div class="detail-price-row">'+
-        '<span class="detail-price">'+parseInt(p.price).toLocaleString()+' so\'m</span>'+
-        (isSale?'<span class="detail-old-price">'+parseInt(p.old_price).toLocaleString()+' so\'m</span><span class="detail-discount">-'+pct+'%</span>':'')+
-      '</div>'+
-      (p.description?'<div class="detail-desc">'+p.description+'</div>':'')+
-      '<div class="detail-divider"></div>'+
-      varHtml+
-      '<div id="vWarn" style="color:#e74c3c;font-size:12px;margin-bottom:10px;display:none">⚠️ Iltimos barcha variantlarni tanlang</div>'+
-      '<button class="btn-primary" onclick="addFromDetail('+p.id+')" style="margin-top:8px">Savatga qo\'shish →</button>'+
-    '</div>';
+  return h;
+}
+function buildDetailHtml(p,mainHtml,thumbsHtml,varHtml,isSale,pct,isWished){
+  let h='<div style="padding-bottom:28px">';
+  h+='<div class="gallery-main" id="gMain">'+mainHtml+'</div>';
+  h+=thumbsHtml;
+  h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">';
+  h+='<div class="detail-brand">'+p.cat+' · '+p.gender+'</div>';
+  h+='<button onclick="toggleWish('+p.id+',this)" style="background:none;border:none;font-size:24px;cursor:pointer" class="'+(isWished?'active':'')+'">'+(isWished?'❤️':'🤍')+'</button>';
+  h+='</div>';
+  h+='<div class="detail-name">'+p.name+'</div>';
+  h+='<div class="detail-price-row">';
+  h+='<span class="detail-price">'+parseInt(p.price).toLocaleString()+' so\'m</span>';
+  if(isSale){h+='<span class="detail-old-price">'+parseInt(p.old_price).toLocaleString()+'</span><span class="detail-discount">-'+pct+'%</span>';}
+  h+='</div>';
+  if(p.description)h+='<div class="detail-desc">'+p.description+'</div>';
+  h+='<div class="detail-divider"></div>';
+  h+=varHtml;
+  h+='<div id="vWarn" style="color:#e74c3c;font-size:12px;margin:8px 0;display:none">⚠️ Iltimos barcha variantlarni tanlang</div>';
+  h+='<button class="btn-primary" onclick="addFromDetail('+p.id+')" style="margin-top:12px">Savatga qo\'shish →</button>';
+  h+='</div>';
+  return h;
 }
 
 function mEl(m){
@@ -947,27 +969,33 @@ function swM(i){
   document.querySelectorAll('.gallery-thumb').forEach(function(t,j){t.classList.toggle('active',j===i);});
 }
 function svM(t,v,el,mode,colorImg){
-  window._selV[t]=v;
-  el.closest('.variant-options').querySelectorAll(mode==='c'?'.color-opt':'.size-opt').forEach(function(x){x.classList.remove('active');});
-  el.classList.add('active');
+  const decodedV=decodeURIComponent(v);
+  window._selV[t]=decodedV;
+  // Remove active from siblings
   if(mode==='c'){
-    const lbl=document.getElementById('clabel_'+t);
-    if(lbl)lbl.textContent=v;
+    el.closest('.vr-colors').querySelectorAll('.vr-color-dot').forEach(function(x){x.classList.remove('active');});
+    const lbl=document.getElementById('cl_'+t);
+    if(lbl)lbl.textContent=decodedV;
+    // Image swap
     if(colorImg&&colorImg.startsWith('http')){
       document.getElementById('gMain').innerHTML=mEl({url:colorImg,type:'image'});
       document.querySelectorAll('.gallery-thumb').forEach(function(th){th.classList.remove('active');});
     } else {
       const vm=window._varMedia||[];
-      const matched=vm.find(function(m){return m.variant_value&&m.variant_value.toLowerCase()===v.toLowerCase();});
+      const matched=vm.find(function(m){
+        return m.variant_value&&m.variant_value.toLowerCase()===decodedV.toLowerCase();
+      });
       if(matched){
         document.getElementById('gMain').innerHTML=mEl({url:matched.url,type:matched.media_type});
         document.querySelectorAll('.gallery-thumb').forEach(function(th){th.classList.remove('active');});
       }
     }
   } else {
-    const lbl=document.getElementById('slabel_'+t);
-    if(lbl)lbl.textContent=v;
+    el.closest('.vr-sizes').querySelectorAll('.vr-size-btn').forEach(function(x){x.classList.remove('active');});
+    const lbl=document.getElementById('sl_'+t);
+    if(lbl)lbl.textContent=decodedV;
   }
+  el.classList.add('active');
 }
 function addFromDetail(id){
   const p=window._detP, vt=window._detVT||[], sel=window._selV||{};
